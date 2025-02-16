@@ -1,9 +1,22 @@
-import React from 'react'
+"use client"
+import { createNewFeedbackAction } from '@/actions/feedbacks'
+import React, { useEffect } from 'react'
 
-const page = () => {
+const Admin = () => {
+
+
+
+    const getDepartments = async () => {
+        const data = await createNewFeedbackAction();
+        console.log(data)
+    }
+    useEffect(() => {
+        getDepartments();
+    }, [])
+
     return (
-        <div>implement page for create feedback at admin side  </div>
+        <div>implement Admin for create feedback at admin side  </div>
     )
 }
 
-export default page
+export default Admin
