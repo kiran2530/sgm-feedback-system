@@ -10,12 +10,16 @@ export type FeedbackForm = {
     feedback_codes: string[]
 }
 
+type response = {
+    questNo: number;
+    rating: string;
+}
 
 export type FeedbackSubmission = {
     id: string;
     faculty_id: string;
     subject_id: string;
-    question_id: number;
-    rating: string;
+    responses: response[]
     feedback_code: string;
 }
+

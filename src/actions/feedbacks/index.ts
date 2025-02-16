@@ -1,6 +1,6 @@
 "use server"
 
-import { FeedbackForm } from "@/types";
+import { FeedbackForm, FeedbackSubmission } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 
 export const createNewFeedbackAction = async (feedbackForm: FeedbackForm) => {
@@ -83,7 +83,41 @@ export const getFeedbackFormAction = async (feedbackId: string) => {
     }
 }
 
-export const insertFeedbackSubmission = async () => {
+export const insertFeedbackSubmissionActions = async (feedbackSubmission: FeedbackSubmission) => {
+    try {
+        const supabase = await createClient();
+
+        const { data, error } = await supabase
+            .from("feedbacks")
+            .insert([
+                {
+                    faculty_id: feedbackSubmission.faculty_id,
+                    subject_id: feedbackSubmission.subject_id,
+                    feedback_code: feedbackSubmission.feedback_code,
+                    responses: feedbackSubmission.responses,
+                }
+
+            ])
+            .select();
+        if (error) {
+            console.log("error in insertFeedbackSubmissionActions : ", error)
+            return {
+                success: false,
+                message: `error in insertFeedbackSubmissionActions : ${error}`
+            }
+        }
+        return {
+            success: true,
+            data: data
+        }
+
+    } catch (error) {
+        console.log("error in insertFeedbackSubmissionActions : ", error)
+        return {
+            success: false,
+            message: `error in insertFeedbackSubmissionActions : ${error}`
+        }
+    }
 
 }
 
@@ -105,3 +139,5 @@ const createFeedbackCodes = (feedbackCount: number): string[] => {
         return [];
     }
 };
+
+
