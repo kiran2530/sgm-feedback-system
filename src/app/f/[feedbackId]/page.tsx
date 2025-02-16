@@ -248,10 +248,24 @@ export default function FeedbackPage() {
 
   // Handle Submit
   const handleSubmit = () => {
-    if (Object.keys(responses).length === 0) {
-      alert("Please provide feedback for all faculties.");
+    let isValid = true;
+
+    feedback.faculties.forEach((faculty) => {
+      feedback.questions.forEach((_, qIndex) => {
+        if (!responses[faculty.id]?.[qIndex]) {
+          isValid = false;
+        }
+      });
+    });
+
+    if (!isValid) {
+      alert("Please answer all questions before submitting.");
+      // setSubmitted(true); // Show validation messages
       return;
     }
+
+    console.log(responses);
+
     setSubmitted(true);
   };
 
@@ -267,46 +281,59 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-16 px-4">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-16 px-2">
       {!submitted ? (
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <div className="bg-white p-2 rounded-lg shadow-lg w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-center mb-6">
             {feedback.feedbackName}
           </h1>
 
           {feedback.faculties.map((faculty) => (
-            <div key={faculty.id} className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <h2 className="text-lg font-semibold mb-2">
+            <div
+              key={faculty.id}
+              className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-600"
+            >
+              <h2 className="font-semibold mb-1">
                 {faculty.name} -{" "}
-                <span className="text-gray-600">{faculty.subject}</span>
+                <span className="text-gray-600 text-sm">{faculty.subject}</span>
               </h2>
 
-              {feedback.questions.map((question, qIndex) => (
-                <div key={question.id} className="mb-3">
-                  <p className="text-sm font-medium">
-                    {qIndex+1}
-                    {") "}
-                    {question.text}
-                  </p>
-                  <div className="flex gap-2 mt-1">
-                    {question.options.map((option, optIndex) => (
-                      <button
-                        key={optIndex}
-                        className={`px-3 py-1 text-sm rounded-md border ${
-                          responses[faculty.id]?.[qIndex] === optIndex + 1
-                            ? "bg-blue-500 text-white"
-                            : "bg-white text-gray-600 hover:bg-blue-100"
-                        }`}
-                        onClick={() =>
-                          handleResponseChange(faculty.id, qIndex, optIndex)
-                        }
-                      >
-                        {option}
-                      </button>
-                    ))}
+              <div className="border-t border-gray-600 my-4"></div>
+
+              <div className="pl-4">
+                {feedback.questions.map((question, qIndex) => (
+                  <div key={question.id} className="mb-3">
+                    <p className="text-sm font-medium">
+                      {qIndex + 1}
+                      {") "}
+                      {question.text} <span className="text-red-500">*</span>
+                    </p>
+                    <div className="flex gap-2 mt-1">
+                      {question.options.map((option, optIndex) => (
+                        <button
+                          key={optIndex}
+                          className={`px-3 py-1 text-sm rounded-md border ${
+                            responses[faculty.id]?.[qIndex] === optIndex + 1
+                              ? "bg-blue-500 text-white"
+                              : "bg-white text-gray-600 hover:bg-blue-100"
+                          }`}
+                          onClick={() =>
+                            handleResponseChange(faculty.id, qIndex, optIndex)
+                          }
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Show warning if unanswered */}
+                    {submitted && !responses[faculty.id]?.[qIndex] && (
+                      <p className="text-xs text-red-500 mt-1">
+                        Please select an option for this question.
+                      </p>
+                    )}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           ))}
 
@@ -318,7 +345,7 @@ export default function FeedbackPage() {
           </button>
         </div>
       ) : (
-        <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
+        <div className="w-full max-w-3xl bg-white p-2 rounded-lg shadow-lg">
           <h1 className="text-2xl font-bold text-center mb-6">
             Feedback Summary
           </h1>
@@ -329,7 +356,10 @@ export default function FeedbackPage() {
             );
 
             return (
-              <div key={faculty.id} className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <div
+                key={faculty.id}
+                className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-600"
+              >
                 <h2 className="text-lg font-semibold mb-2">
                   {faculty.name} -{" "}
                   <span className="text-gray-600">{faculty.subject}</span>
@@ -339,15 +369,32 @@ export default function FeedbackPage() {
                   {overallAverage.toFixed(2)}
                 </p>
 
+                <div className="border-t border-gray-600 my-3"></div>
+
                 <div className="mt-3">
-                  {feedback.questions.map((question, qIndex) => (
-                    <p key={question.id} className="text-sm text-gray-700">
-                      <span className="font-medium">{question.text}:</span>{" "}
-                      {questionAverages[qIndex]
-                        ? questionAverages[qIndex].toFixed(2)
-                        : "N/A"}
-                    </p>
-                  ))}
+                  <div className="text-gray-900 flex justify-between gap-3">
+                    <div className="font-semibold">Questions</div>
+                    <div className="font-semibold">Rating</div>
+                  </div>
+
+                  <div className="p-2">
+                    {feedback.questions.map((question, qIndex) => (
+                      <div
+                        key={question.id}
+                        className="text-xs text-gray-700 flex justify-between gap-3"
+                      >
+                        <div className="font-medium">
+                          {"Q" + (qIndex + 1) + ") "}
+                          {question.text}:
+                        </div>{" "}
+                        <div>
+                          {questionAverages[qIndex]
+                            ? questionAverages[qIndex].toFixed(2)
+                            : "N/A"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             );
