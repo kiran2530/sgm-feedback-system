@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar/>
+        <Navbar />
         <main className="min-h-screen bg-gray-50">{children}</main>
       </body>
     </html>

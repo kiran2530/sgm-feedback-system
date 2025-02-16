@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState } from "react";
 import { useParams } from "next/navigation";
@@ -284,7 +285,7 @@ export default function FeedbackPage() {
               {feedback.questions.map((question, qIndex) => (
                 <div key={question.id} className="mb-3">
                   <p className="text-sm font-medium">
-                    {qIndex+1}
+                    {qIndex + 1}
                     {") "}
                     {question.text}
                   </p>
@@ -292,11 +293,10 @@ export default function FeedbackPage() {
                     {question.options.map((option, optIndex) => (
                       <button
                         key={optIndex}
-                        className={`px-3 py-1 text-sm rounded-md border ${
-                          responses[faculty.id]?.[qIndex] === optIndex + 1
-                            ? "bg-blue-500 text-white"
-                            : "bg-white text-gray-600 hover:bg-blue-100"
-                        }`}
+                        className={`px-3 py-1 text-sm rounded-md border ${responses[faculty.id]?.[qIndex] === optIndex + 1
+                          ? "bg-blue-500 text-white"
+                          : "bg-white text-gray-600 hover:bg-blue-100"
+                          }`}
                         onClick={() =>
                           handleResponseChange(faculty.id, qIndex, optIndex)
                         }
