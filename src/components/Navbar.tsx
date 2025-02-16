@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Plus, X, User, LogOut } from "lucide-react";
-import { useRouter } from "next/router";
+import collegeLogo from "../../public/collegeImage.png";
+import Image from "next/image";
+
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -62,7 +64,9 @@ const Navbar = () => {
       <nav className="p-2 shadow-md fixed top-0 w-full flex justify-between items-center bg-white bg-opacity-30 backdrop-blur-md">
         <div className="container mx-auto flex justify-between items-center">
           {/* Left Side: Name */}
-          <h1 className="text-2xl font-bold">SGM</h1>
+          {/* <h1 className="text-2xl font-bold">SGM</h1> */}
+
+          <Image src={collegeLogo} alt="SGM" height={80} width={80}></Image>
 
           {/* Right Side: Buttons */}
           {pathname == "/" ? (
