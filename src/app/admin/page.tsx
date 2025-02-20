@@ -85,7 +85,7 @@ export default function Page() {
   }, []);
 
   // Mock data
-  const { MOCK_DATA, setMOCK_DATA } = useFeedback();
+  const { MOCK_DATA } = useFeedback();
 
   const filteredData = MOCK_DATA.filter(
     (item) =>
