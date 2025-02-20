@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFeedback } from "@/context/FeedbackContext";
 
 export default function Page() {
   const router = useRouter();
@@ -8,55 +9,13 @@ export default function Page() {
   const [classLevel, setClassLevel] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  const { MOCK_DATA, setMOCK_DATA } = useFeedback();
   // Sample feedback data (Replace with actual API data)
-  const allFeedbacks = [
-    {
-      id: "1",
-      title: "DSA Feedback",
-      department: "CSE",
-      classLevel: "TY",
-      expires: "20th Feb 2025",
-    },
-    {
-      id: "2",
-      title: "Software Engineering",
-      department: "CSE",
-      classLevel: "SY",
-      expires: "25th Feb 2025",
-    },
-    {
-      id: "3",
-      title: "Machine Learning",
-      department: "CSE",
-      classLevel: "BE",
-      expires: "1st Mar 2025",
-    },
-    {
-      id: "4",
-      title: "VLSI Feedback",
-      department: "ECE",
-      classLevel: "TY",
-      expires: "18th Feb 2025",
-    },
-    {
-      id: "5",
-      title: "Fluid Mechanics",
-      department: "ME",
-      classLevel: "SY",
-      expires: "28th Feb 2025",
-    },
-    {
-      id: "6",
-      title: "Cybersecurity",
-      department: "CSE",
-      classLevel: "BE",
-      expires: "20th Mar 2025",
-    },
-  ];
+  const allFeedbacks = MOCK_DATA;
 
   // Filter active feedbacks based on selected department & class
   const filteredFeedbacks = allFeedbacks.filter(
-    (fb) => fb.department === department && fb.classLevel === classLevel
+    (fb) => fb.department === department && fb.class === classLevel
   );
 
   // Handle Submit
@@ -86,7 +45,7 @@ export default function Page() {
                 onChange={(e) => setDepartment(e.target.value)}
               >
                 <option value="">Select</option>
-                <option value="CSE">Computer Science</option>
+                <option value="Computer Science">Computer Science</option>
                 <option value="ECE">Electronics</option>
                 <option value="ME">Mechanical</option>
               </select>
@@ -99,10 +58,10 @@ export default function Page() {
                 onChange={(e) => setClassLevel(e.target.value)}
               >
                 <option value="">Select</option>
-                <option value="FY">First Year</option>
-                <option value="SY">Second Year</option>
-                <option value="TY">Third Year</option>
-                <option value="BE">Final Year</option>
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+                <option value="Final Year">Final Year</option>
               </select>
 
               {/* Submit Button */}
@@ -131,7 +90,7 @@ export default function Page() {
                   onClick={() => router.push(`/f/${fb.id}`)}
                 >
                   <h3 className="text-lg font-semibold">{fb.title}</h3>
-                  <p className="text-sm text-gray-500">Expires: {fb.expires}</p>
+                  <p className="text-sm text-gray-500">Expires: {fb.date}</p>
                 </div>
               ))}
             </div>

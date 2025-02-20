@@ -10,6 +10,7 @@ import {
   Check,
   StepBack,
 } from "lucide-react";
+import { useFeedback } from "@/context/FeedbackContext";
 
 interface Rating {
   q1: number;
@@ -42,7 +43,7 @@ interface Feedback {
   faculties: Faculties[];
 }
 
-const departments = {
+const departments: Record<string, string[]> = {
   "First Year": ["Div A", "Div B", "Div C"],
   "Computer Science": ["Second Year", "Third Year", "Final Year"],
   Mechanical: ["Second Year", "Third Year", "Final Year"],
@@ -65,7 +66,8 @@ export default function Page() {
   const [stage, setStage] = useState(0);
 
   // states for sorting
-  const [years, setYears] = useState([]);
+  const initialYears: string[] = [];
+  const [years, setYears] = useState(initialYears);
   const [academicYear, setAcademicYear] = useState("");
   const [department, setDepartment] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
@@ -79,290 +81,11 @@ export default function Page() {
       yearList.push(`${year}-${year + 1}`);
     }
 
-    console.log(yearList);
-
     setYears(yearList);
   }, []);
 
   // Mock data
-  const MOCK_DATA: Feedback[] = [
-    {
-      id: 1,
-      academicYear: "2024-25",
-      department: "Computer Science",
-      class: "Final Year",
-      semester: "8",
-      title: "Semester 8 Feedback",
-      date: "2024-02-15",
-      faculties: [
-        {
-          name: "S. S. Gurav",
-          subject: "Software Engineering",
-          totalAvarage: 3.9,
-          rating: {
-            q1: 4,
-            q2: 5,
-            q3: 3,
-            q4: 4,
-            q5: 5,
-            q6: 2,
-            q7: 3,
-            q8: 4,
-            q9: 5,
-            q10: 4,
-          },
-        },
-        {
-          name: "S. G. Swami",
-          subject: "Machine Learning",
-          totalAvarage: 4.1,
-          rating: {
-            q1: 5,
-            q2: 4,
-            q3: 4,
-            q4: 5,
-            q5: 4,
-            q6: 3,
-            q7: 5,
-            q8: 4,
-            q9: 4,
-            q10: 5,
-          },
-        },
-        {
-          name: "A. B. Patil",
-          subject: "Cloud Computing",
-          totalAvarage: 4.0,
-          rating: {
-            q1: 4,
-            q2: 4,
-            q3: 5,
-            q4: 4,
-            q5: 4,
-            q6: 4,
-            q7: 5,
-            q8: 4,
-            q9: 3,
-            q10: 4,
-          },
-        },
-        {
-          name: "P. R. Desai",
-          subject: "Cyber Security",
-          totalAvarage: 4.2,
-          rating: {
-            q1: 5,
-            q2: 4,
-            q3: 4,
-            q4: 5,
-            q5: 5,
-            q6: 4,
-            q7: 5,
-            q8: 4,
-            q9: 4,
-            q10: 5,
-          },
-        },
-      ],
-    },
-    {
-      id: 2,
-      academicYear: "2024-25",
-      department: "Computer Science",
-      class: "Third Year",
-      semester: "6",
-      title: "Semester 6 Feedback",
-      date: "2024-02-14",
-      faculties: [
-        {
-          name: "M. T. Kulkarni",
-          subject: "Data Structures",
-          totalAvarage: 3.8,
-          rating: {
-            q1: 4,
-            q2: 4,
-            q3: 3,
-            q4: 3,
-            q5: 5,
-            q6: 4,
-            q7: 3,
-            q8: 4,
-            q9: 4,
-            q10: 3,
-          },
-        },
-        {
-          name: "D. S. Pawar",
-          subject: "Database Management Systems",
-          totalAvarage: 3.9,
-          rating: {
-            q1: 4,
-            q2: 4,
-            q3: 4,
-            q4: 4,
-            q5: 4,
-            q6: 4,
-            q7: 3,
-            q8: 5,
-            q9: 4,
-            q10: 4,
-          },
-        },
-        {
-          name: "V. K. Joshi",
-          subject: "Computer Networks",
-          totalAvarage: 4.0,
-          rating: {
-            q1: 4,
-            q2: 5,
-            q3: 4,
-            q4: 4,
-            q5: 5,
-            q6: 3,
-            q7: 4,
-            q8: 4,
-            q9: 4,
-            q10: 4,
-          },
-        },
-      ],
-    },
-    {
-      id: 3,
-      academicYear: "2024-25",
-      department: "Mechanical",
-      class: "Final Year",
-      semester: "8",
-      title: "Semester 8 Feedback",
-      date: "2024-02-13",
-      faculties: [
-        {
-          name: "N. P. Sawant",
-          subject: "Thermodynamics",
-          totalAvarage: 3.7,
-          rating: {
-            q1: 3,
-            q2: 4,
-            q3: 3,
-            q4: 3,
-            q5: 4,
-            q6: 3,
-            q7: 4,
-            q8: 4,
-            q9: 3,
-            q10: 4,
-          },
-        },
-        {
-          name: "A. K. Jadhav",
-          subject: "Manufacturing Processes",
-          totalAvarage: 3.9,
-          rating: {
-            q1: 4,
-            q2: 3,
-            q3: 5,
-            q4: 4,
-            q5: 4,
-            q6: 4,
-            q7: 4,
-            q8: 3,
-            q9: 5,
-            q10: 4,
-          },
-        },
-      ],
-    },
-    {
-      id: 4,
-      academicYear: "2024-25",
-      department: "Electrical",
-      class: "Third Year",
-      semester: "6",
-      title: "Semester 6 Feedback",
-      date: "2024-02-12",
-      faculties: [
-        {
-          name: "K. R. Patil",
-          subject: "Power Systems",
-          totalAvarage: 4.1,
-          rating: {
-            q1: 5,
-            q2: 4,
-            q3: 4,
-            q4: 4,
-            q5: 4,
-            q6: 4,
-            q7: 3,
-            q8: 5,
-            q9: 4,
-            q10: 4,
-          },
-        },
-        {
-          name: "P. S. More",
-          subject: "Control Systems",
-          totalAvarage: 3.8,
-          rating: {
-            q1: 4,
-            q2: 4,
-            q3: 3,
-            q4: 3,
-            q5: 4,
-            q6: 3,
-            q7: 4,
-            q8: 4,
-            q9: 3,
-            q10: 4,
-          },
-        },
-      ],
-    },
-    {
-      id: 5,
-      academicYear: "2024-25",
-      department: "Civil",
-      class: "Second Year",
-      semester: "4",
-      title: "Semester 4 Feedback",
-      date: "2024-02-11",
-      faculties: [
-        {
-          name: "R. B. Naik",
-          subject: "Structural Analysis",
-          totalAvarage: 4.0,
-          rating: {
-            q1: 4,
-            q2: 4,
-            q3: 5,
-            q4: 4,
-            q5: 4,
-            q6: 4,
-            q7: 5,
-            q8: 4,
-            q9: 3,
-            q10: 4,
-          },
-        },
-        {
-          name: "S. T. Patil",
-          subject: "Concrete Technology",
-          totalAvarage: 3.7,
-          rating: {
-            q1: 3,
-            q2: 4,
-            q3: 3,
-            q4: 3,
-            q5: 4,
-            q6: 3,
-            q7: 4,
-            q8: 4,
-            q9: 3,
-            q10: 4,
-          },
-        },
-      ],
-    },
-  ];
+  const { MOCK_DATA, setMOCK_DATA } = useFeedback();
 
   const filteredData = MOCK_DATA.filter(
     (item) =>
@@ -387,29 +110,39 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="container mx-auto py-6 px-4 ">
       {/* folder for year vise */}
-      <div className="mt-14 flex justify-between mb-6">
-        <p className="">
+      <div className="mt-14 flex items-center mb-6 ">
+        <button
+          className="bg-black text-white py-1 px-2 rounded-lg flex justify-center items-center w-20"
+          onClick={() => {
+            if (stage == 1) {
+              setAcademicYear("");
+            }
+            if (stage == 2) {
+              setDepartment("");
+            }
+            if (stage == 3) {
+              setSelectedClass("");
+            }
+
+            if (stage) setStage(stage - 1);
+          }}
+        >
+          <StepBack width={20} height={20} />
+          Back
+        </button>
+        <p className="ml-3 bg-blue-400 w-full py-1 px-2 rounded-lg">
           admin/{academicYear && academicYear + "/"}
           {department && department + "/"}
           {selectedClass && selectedClass}
         </p>
-        {stage != 0 && (
-          <button
-            className="bg-black text-white py-1 px-2 rounded-lg flex justify-center items-center"
-            onClick={() => {
-              if (stage) setStage(stage - 1);
-            }}
-          >
-            <StepBack width={20} height={20} />
-            Back
-          </button>
-        )}
       </div>
       {stage == 0 && (
-        <div className="flex flex-col items-center w-full">
-          <h2 className="text-2xl font-bold mb-4">Academic Year Folders</h2>
+        <div className="">
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Academic Years</h2>
+          </div>
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {years.map((year, index) => (
               <div
@@ -429,7 +162,7 @@ export default function Page() {
 
       {/* display Departments */}
       {stage == 1 && (
-        <div className="p-6">
+        <div className="">
           <h3 className="text-xl font-bold mb-4">
             Departments for {academicYear}
           </h3>
@@ -451,7 +184,7 @@ export default function Page() {
       )}
 
       {stage == 2 && (
-        <div className="p-6">
+        <div className="">
           <h3 className="text-xl font-bold mb-4">Classes for {department}</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {departments[department].map((cls, index) => (
@@ -461,9 +194,6 @@ export default function Page() {
                 onClick={() => {
                   setSelectedClass(cls);
                   setStage(3);
-                  console.log(academicYear, department, selectedClass);
-                  console.log("MOCK_DATA: ", MOCK_DATA);
-                  console.log("filtered :" + filteredData);
                 }}
               >
                 {cls}
