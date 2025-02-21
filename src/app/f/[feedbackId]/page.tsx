@@ -2,230 +2,13 @@
 "use client";
 import { useState } from "react";
 import { useParams } from "next/navigation";
-
-// Sample Feedback Data
-const sampleFeedbackData = [
-  {
-    id: "1",
-    feedbackName: "DSA Feedback",
-    department: "CSE",
-    classLevel: "TY",
-    expires: "20th Feb 2025",
-    faculties: [
-      { id: 1, name: "Dr. Alice Johnson", subject: "Data Structures" },
-      { id: 2, name: "Prof. Bob Williams", subject: "Algorithms" },
-      { id: 3, name: "Dr. Carol Miller", subject: "Graph Theory" },
-    ],
-    questions: [
-      {
-        id: 1,
-        text: "How clear were the explanations of DSA concepts?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 2,
-        text: "Was the pace of teaching appropriate?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 3,
-        text: "Were the provided coding exercises useful?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 4,
-        text: "Did the faculty address doubts effectively?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-    ],
-  },
-  {
-    id: "2",
-    feedbackName: "Software Engineering",
-    department: "CSE",
-    classLevel: "SY",
-    expires: "25th Feb 2025",
-    faculties: [
-      { id: 4, name: "Dr. Emily Brown", subject: "Software Development" },
-      { id: 5, name: "Prof. Michael Green", subject: "Agile Methodologies" },
-      { id: 6, name: "Dr. Kevin Smith", subject: "Software Testing" },
-    ],
-    questions: [
-      {
-        id: 5,
-        text: "Was the software development process well explained?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 6,
-        text: "Did the faculty provide real-world examples?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 7,
-        text: "How engaging were the classroom discussions?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 8,
-        text: "Were project-based assignments helpful?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-    ],
-  },
-  {
-    id: "3",
-    feedbackName: "Machine Learning",
-    department: "CSE",
-    classLevel: "BE",
-    expires: "1st Mar 2025",
-    faculties: [
-      { id: 7, name: "Dr. Olivia Smith", subject: "Deep Learning" },
-      { id: 8, name: "Prof. Daniel White", subject: "Supervised Learning" },
-      { id: 9, name: "Dr. Eric Carter", subject: "Unsupervised Learning" },
-      { id: 10, name: "Prof. Sarah Collins", subject: "Feature Engineering" },
-    ],
-    questions: [
-      {
-        id: 9,
-        text: "Were ML algorithms explained in detail?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 10,
-        text: "Did the faculty provide hands-on projects?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 11,
-        text: "Was dataset preprocessing covered adequately?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 12,
-        text: "How interactive were the ML lab sessions?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 13,
-        text: "Were practical case studies provided?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-    ],
-  },
-  {
-    id: "4",
-    feedbackName: "VLSI Feedback",
-    department: "ECE",
-    classLevel: "TY",
-    expires: "18th Feb 2025",
-    faculties: [
-      { id: 11, name: "Dr. Sarah Lee", subject: "VLSI Design" },
-      { id: 12, name: "Prof. David Brown", subject: "Chip Design" },
-      { id: 13, name: "Dr. Robert Johnson", subject: "ASIC Design" },
-    ],
-    questions: [
-      {
-        id: 14,
-        text: "How well were the VLSI concepts explained?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 15,
-        text: "Did the faculty use practical examples?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 16,
-        text: "Was the simulation software training adequate?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 17,
-        text: "Were industry trends discussed in the class?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-    ],
-  },
-  {
-    id: "5",
-    feedbackName: "Fluid Mechanics",
-    department: "ME",
-    classLevel: "SY",
-    expires: "28th Feb 2025",
-    faculties: [
-      { id: 14, name: "Dr. Henry Thomas", subject: "Hydraulics" },
-      { id: 15, name: "Prof. Anna Scott", subject: "Turbulence" },
-    ],
-    questions: [
-      {
-        id: 18,
-        text: "Was the faculty able to clarify fluid dynamics concepts?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 19,
-        text: "Were the numerical problems well explained?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 20,
-        text: "How effective were the practical demonstrations?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-    ],
-  },
-  {
-    id: "6",
-    feedbackName: "Cybersecurity",
-    department: "CSE",
-    classLevel: "BE",
-    expires: "20th Mar 2025",
-    faculties: [
-      { id: 16, name: "Dr. Logan Kent", subject: "Ethical Hacking" },
-      { id: 17, name: "Prof. Bruce Wayne", subject: "Cryptography" },
-      { id: 18, name: "Dr. Diana Prince", subject: "Network Security" },
-      { id: 19, name: "Prof. Clark Kent", subject: "Cyber Threats" },
-      { id: 20, name: "Dr. Barry Allen", subject: "Incident Response" },
-    ],
-    questions: [
-      {
-        id: 21,
-        text: "Did the faculty explain cybersecurity threats well?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 22,
-        text: "Were hands-on security labs provided?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 23,
-        text: "How useful was the ethical hacking practical session?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 24,
-        text: "Was encryption explained with real-world examples?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 25,
-        text: "Did the faculty discuss the latest cybersecurity trends?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-      {
-        id: 26,
-        text: "Were students encouraged to participate in security competitions?",
-        options: ["1", "2", "3", "4", "5"],
-      },
-    ],
-  },
-];
+import { useFeedback } from "@/context/FeedbackContext";
 
 export default function FeedbackPage() {
   const { feedbackId } = useParams();
-  const feedback = sampleFeedbackData.find((f) => f.id === feedbackId);
+  const { MOCK_DATA } = useFeedback();
+
+  const feedback = MOCK_DATA.find((f) => f.id.toString() === feedbackId);
 
   const [responses, setResponses] = useState<{ [key: number]: number[] }>({});
   const [submitted, setSubmitted] = useState(false);
@@ -233,21 +16,19 @@ export default function FeedbackPage() {
   if (!feedback)
     return <div className="text-center text-red-500">Feedback not found!</div>;
 
-  // Handle response selection
   const handleResponseChange = (
     facultyId: number,
     questionId: number,
-    optionIndex: number
+    value: number
   ) => {
     setResponses((prev) => {
       const updatedResponses = { ...prev };
       if (!updatedResponses[facultyId]) updatedResponses[facultyId] = [];
-      updatedResponses[facultyId][questionId] = optionIndex + 1; // Store ratings as numbers (1-5)
+      updatedResponses[facultyId][questionId] = value; // Store ratings as numbers (1-5)
       return updatedResponses;
     });
   };
 
-  // Handle Submit
   const handleSubmit = () => {
     let isValid = true;
 
@@ -261,16 +42,13 @@ export default function FeedbackPage() {
 
     if (!isValid) {
       alert("Please answer all questions before submitting.");
-      // setSubmitted(true); // Show validation messages
       return;
     }
 
     console.log(responses);
-
     setSubmitted(true);
   };
 
-  // Calculate faculty-wise and question-wise averages
   const calculateAverages = (facultyId: number) => {
     const facultyResponses = responses[facultyId] || [];
     const questionAverages = facultyResponses.map((sum, i) => sum || 0);
@@ -282,11 +60,11 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-16 px-2">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-16 px-2 mt-8">
       {!submitted ? (
         <div className="bg-white p-2 rounded-lg shadow-lg w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-center mb-6">
-            {feedback.feedbackName}
+            {feedback.title}
           </h1>
 
           {feedback.faculties.map((faculty) => (
@@ -303,35 +81,31 @@ export default function FeedbackPage() {
 
               <div className="pl-4">
                 {feedback.questions.map((question, qIndex) => (
-                  <div key={question.id} className="mb-3">
-                    <p className="text-sm font-medium">
-                      {qIndex + 1}
-                      {") "}
-                      {question.text} <span className="text-red-500">*</span>
+                  <div key={question.id} className="mb-3 flex justify-between ">
+                    <p className="text-sm font-medium w-4/5">
+                      {"Q"}{qIndex + 1}) {question.question}{" "}
+                      <span className="text-red-500">*</span>
                     </p>
-                    <div className="flex gap-2 mt-1">
-                      {question.options.map((option, optIndex) => (
-                        <button
-                          key={optIndex}
-                          className={`px-3 py-1 text-sm rounded-md border ${
-                            responses[faculty.id]?.[qIndex] === optIndex + 1
-                              ? "bg-blue-500 text-white"
-                              : "bg-white text-gray-600 hover:bg-blue-100"
-                          }`}
-                          onClick={() =>
-                            handleResponseChange(faculty.id, qIndex, optIndex)
-                          }
-                        >
+                    <select
+                      className=" p-1 border rounded-md"
+                      value={responses[faculty.id]?.[qIndex] || ""}
+                      onChange={(e) =>
+                        handleResponseChange(
+                          faculty.id,
+                          qIndex,
+                          Number(e.target.value)
+                        )
+                      }
+                    >
+                      <option value="" disabled>
+                        Select
+                      </option>
+                      {feedback.ratingOptions.map((option, optIndex) => (
+                        <option key={optIndex} value={optIndex + 1}>
                           {option}
-                        </button>
+                        </option>
                       ))}
-                    </div>
-                    {/* Show warning if unanswered */}
-                    {submitted && !responses[faculty.id]?.[qIndex] && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Please select an option for this question.
-                      </p>
-                    )}
+                    </select>
                   </div>
                 ))}
               </div>
@@ -369,9 +143,7 @@ export default function FeedbackPage() {
                   <span className="font-bold">Overall Average:</span>{" "}
                   {overallAverage.toFixed(2)}
                 </p>
-
                 <div className="border-t border-gray-600 my-3"></div>
-
                 <div className="mt-3">
                   <div className="text-gray-900 flex justify-between gap-3">
                     <div className="font-semibold">Questions</div>
@@ -386,7 +158,7 @@ export default function FeedbackPage() {
                       >
                         <div className="font-medium">
                           {"Q" + (qIndex + 1) + ") "}
-                          {question.text}:
+                          {question.question}:
                         </div>{" "}
                         <div>
                           {questionAverages[qIndex]

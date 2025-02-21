@@ -9,7 +9,7 @@ export default function Page() {
   const [classLevel, setClassLevel] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const { MOCK_DATA, setMOCK_DATA } = useFeedback();
+  const { MOCK_DATA } = useFeedback();
   // Sample feedback data (Replace with actual API data)
   const allFeedbacks = MOCK_DATA;
 
