@@ -114,7 +114,7 @@ export default function Page() {
       {/* folder for year vise */}
       <div className="mt-14 flex items-center mb-6 ">
         <button
-          className="bg-black text-white py-1 px-2 rounded-lg flex justify-center items-center w-20"
+          className="bg-black text-white py-1 px-2 rounded-lg flex justify-center items-center w-20 text-sm sm:text-base"
           onClick={() => {
             if (stage == 1) {
               setAcademicYear("");
@@ -132,7 +132,7 @@ export default function Page() {
           <StepBack width={20} height={20} />
           Back
         </button>
-        <p className="ml-3 bg-blue-400 w-full py-1 px-2 rounded-lg">
+        <p className="ml-3 bg-blue-400 w-full py-1 px-2 rounded-lg text-sm sm:text-base">
           admin/{academicYear && academicYear + "/"}
           {department && department + "/"}
           {selectedClass && selectedClass}
@@ -280,6 +280,11 @@ export default function Page() {
               </div>
             ))}
           </div>
+          {filteredData.length == 0 && (
+            <div className="py-2 px-4 w-full flex justify-center">
+              No Feedbacks are listed...
+            </div>
+          )}
         </>
       )}
 
