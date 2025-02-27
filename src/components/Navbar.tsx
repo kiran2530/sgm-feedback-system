@@ -101,6 +101,7 @@ const Navbar = () => {
   const [faculties, setFaculties] = useState<
     { name: string; subject: string }[]
   >([]);
+  const [term, setTerm] = useState("");
 
   useEffect(() => {
     const currentYear = new Date().getFullYear();
@@ -131,6 +132,7 @@ const Navbar = () => {
       department,
       class: classLevel, // Ensure key matches existing structure
       semester,
+      term,
       title: feedbackName, // Assuming title corresponds to feedbackName
       date,
       faculties: faculties.map((faculty) => ({
@@ -448,6 +450,24 @@ const Navbar = () => {
                       </option>
                     )
                   )}
+                </select>
+              </div>
+
+              {/* Select Term */}
+              <div className="sm:w-[50%]">
+                <label className="block text-lg font-semibold mb-1">
+                  Select Term
+                </label>
+                <select
+                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                  value={term}
+                  onChange={(e) => setTerm(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Select
+                  </option>
+                  <option value="Mid Term">Mid Term</option>
+                  <option value="End Term">End Term</option>
                 </select>
               </div>
 
