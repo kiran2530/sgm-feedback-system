@@ -35,6 +35,7 @@ interface Feedback {
   department: string;
   class: string;
   semester: string;
+  term: string;
   title: string;
   date: string;
   faculties: Faculties[];
@@ -50,6 +51,7 @@ const MOCK_DATA_Initial: Feedback[] = [
     department: "Computer Science",
     class: "Final Year",
     semester: "8",
+    term: "Mid Term",
     title: "Semester 8 Feedback",
     date: "2024-02-15",
     faculties: [
@@ -216,6 +218,7 @@ const MOCK_DATA_Initial: Feedback[] = [
     department: "Computer Science",
     class: "Third Year",
     semester: "6",
+    term: "Mid Term",
     title: "Semester 6 Feedback",
     date: "2024-02-14",
     faculties: [
@@ -364,6 +367,7 @@ const MOCK_DATA_Initial: Feedback[] = [
     department: "Mechanical",
     class: "Final Year",
     semester: "8",
+    term: "Mid Term",
     title: "Semester 8 Feedback",
     date: "2024-02-13",
     faculties: [
@@ -494,6 +498,7 @@ const MOCK_DATA_Initial: Feedback[] = [
     department: "Electrical",
     class: "Third Year",
     semester: "6",
+    term: "Mid Term",
     title: "Semester 6 Feedback",
     date: "2024-02-12",
     faculties: [
@@ -624,6 +629,7 @@ const MOCK_DATA_Initial: Feedback[] = [
     department: "Civil",
     class: "Second Year",
     semester: "4",
+    term: "Mid Term",
     title: "Semester 4 Feedback",
     date: "2024-02-11",
     faculties: [
