@@ -11,6 +11,8 @@ import {
   StepBack,
 } from "lucide-react";
 import { useFeedback } from "@/context/FeedbackContext";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import FeedbackPDF from "../../components/FeedbackPDF";
 
 interface Rating {
   q1: number;
@@ -26,10 +28,15 @@ interface Rating {
 }
 
 interface Faculties {
+  id:number,
   name: string;
   totalAvarage: number;
   subject: string;
   rating: Rating;
+}
+interface Questions {
+  id: number;
+  question: string;
 }
 
 interface Feedback {
@@ -38,9 +45,12 @@ interface Feedback {
   department: string;
   class: string;
   semester: string;
+  term: string;
   title: string;
   date: string;
   faculties: Faculties[];
+  questions: Questions[];
+  ratingOptions: number[];
 }
 
 const departments: Record<string, string[]> = {
@@ -291,8 +301,8 @@ export default function Page() {
       {/* Feedback Detail Modal */}
       {selectedFeedback && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg w-full max-w-5xl p-6 space-y-4 animate-scaleIn h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start">
+          <div className="bg-white rounded-lg w-full max-w-5xl p-6 animate-scaleIn h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-2">
               <div>
                 <h2 className="text-2xl font-bold mb-1">
                   {selectedFeedback.title}
@@ -332,8 +342,8 @@ export default function Page() {
             </div>
 
             {/* Responses Section */}
-            <div className="space-y-3">
-              <h3 className="font-semibold">Responses:</h3>
+            <div className="space-y-3 mt-6">
+              <h3 className="font-semibold text-lg">Responses:</h3>
               {selectedFeedback.faculties.map((faculty, idx) => (
                 <div key={idx} className="border rounded-lg overflow-hidden">
                   <div
@@ -390,6 +400,28 @@ export default function Page() {
                   )}
                 </div>
               ))}
+            </div>
+            <div className="flex justify-end mt-14">
+              <PDFDownloadLink
+                document={<FeedbackPDF selectedFeedback={selectedFeedback} />}
+                fileName={`${
+                  selectedFeedback.academicYear +
+                  selectedFeedback.department +
+                  selectedFeedback.class
+                }`}
+              >
+                {({ loading }) =>
+                  loading ? (
+                    <button className="px-4 py-2 bg-gray-400 text-white rounded">
+                      Loading...
+                    </button>
+                  ) : (
+                    <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                      Generate PDF
+                    </button>
+                  )
+                }
+              </PDFDownloadLink>
             </div>
           </div>
         </div>
