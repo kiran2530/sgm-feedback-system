@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use server"
 import { createClient } from "@/utils/supabase/server";
+import { supabase } from '../../utils/supabase/client';
 
 export const getAllResponsesByFeedbackAction = async (feedbackId: string) => {
     try {
@@ -23,6 +27,32 @@ export const getAllResponsesByFeedbackAction = async (feedbackId: string) => {
         return {
             success: false,
             message: `error in getAllResponsesByFeedbackAction : ${error}`
+        }
+    }
+}
+
+export const createNewResponseAction = async (response: any) => {
+    try {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("responses")
+            .insert([response])
+            .select();
+        if (error) {
+            return {
+                success: false,
+                message: `error in createNewResponseAction : ${error}`
+            }
+        }
+        return {
+            success: true,
+            data
+        }
+
+    } catch (error) {
+        return {
+            success: false,
+            message: `error in createNewResponseAction : ${error}`
         }
     }
 }
