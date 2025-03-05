@@ -25,67 +25,63 @@ export default function FeedbackPage() {
   const response = {
     response: [
       {
-        "saurabh": {
-          "q1": {
-            "mark": 15.5,
-            "rating": 2
+        saurabh: {
+          q1: {
+            mark: 15.5,
+            rating: 2,
           },
-          "q2": {
-            "mark": 15.5,
-            "rating": 2
+          q2: {
+            mark: 15.5,
+            rating: 2,
           },
-          "q3": {
-            "mark": 15.5,
-            "rating": 2
+          q3: {
+            mark: 15.5,
+            rating: 2,
           },
-          "q4": {
-            "mark": 15.5,
-            "rating": 2
+          q4: {
+            mark: 15.5,
+            rating: 2,
           },
-          "q5": {
-            "mark": 15.5,
-            "rating": 2
+          q5: {
+            mark: 15.5,
+            rating: 2,
           },
-          "q6": {
-            "mark": 15.5,
-            "rating": 2
-          },
-        },
-        "kiran": {
-          "q1": {
-            "mark": 15.5,
-            "rating": 2
-          },
-          "q2": {
-            "mark": 15.5,
-            "rating": 2
-          },
-          "q3": {
-            "mark": 15.5,
-            "rating": 2
-          },
-          "q4": {
-            "mark": 15.5,
-            "rating": 2
-          },
-          "q5": {
-            "mark": 15.5,
-            "rating": 2
-          },
-          "q6": {
-            "mark": 15.5,
-            "rating": 2
+          q6: {
+            mark: 15.5,
+            rating: 2,
           },
         },
-
-      }
+        kiran: {
+          q1: {
+            mark: 15.5,
+            rating: 2,
+          },
+          q2: {
+            mark: 15.5,
+            rating: 2,
+          },
+          q3: {
+            mark: 15.5,
+            rating: 2,
+          },
+          q4: {
+            mark: 15.5,
+            rating: 2,
+          },
+          q5: {
+            mark: 15.5,
+            rating: 2,
+          },
+          q6: {
+            mark: 15.5,
+            rating: 2,
+          },
+        },
+      },
     ],
     unique_code: "A12",
-    feedback_id: "b10f9f33-7bf5-486f-bc60-e5fb2fc0e72c"
-  }
-
-
-
+    feedback_id: "b10f9f33-7bf5-486f-bc60-e5fb2fc0e72c",
+  };
 
   const handleResponseChange = (
     facultyId: number,
@@ -144,13 +140,12 @@ export default function FeedbackPage() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    insertResponse()
-  }, [])
+    insertResponse();
+  }, []);
   const insertResponse = async () => {
     const data = await createNewResponseAction(response);
-    console.log('response after inserting resp : ', data)
-  }
-
+    console.log("response after inserting resp : ", data);
+  };
 
   return (
     <div
@@ -192,8 +187,9 @@ export default function FeedbackPage() {
           {feedback.faculties.map((faculty, index) => (
             <div
               key={faculty.id}
-              className={`mb-6 p-1 sm:p-4 bg-gray-50 rounded-lg border border-gray-300 ${nextFaculty !== index ? "hidden" : ""
-                }`}
+              className={`mb-6 p-1 sm:p-4 bg-gray-50 rounded-lg border border-gray-300 ${
+                nextFaculty !== index ? "hidden" : ""
+              }`}
             >
               <h2 className="font-semibold mb-1">
                 {faculty.name} -{" "}
@@ -202,17 +198,34 @@ export default function FeedbackPage() {
 
               <div className="border-t border-gray-600 my-4"></div>
 
+              <div className="sm:pl-4 flex justify-between text-xs font-bold">
+                <div className="flex w-11/12 justify-center">
+                  <p>Questions</p>
+                </div>
+                <div className="flex gap-1 w-6/12 sm:w-3/12">
+                  <p className="w-1/2 flex justify-center">Weights</p>
+                  <p className="w-1/2 flex justify-center">Rattings</p>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-300 my-1"></div>
+
               <div className="sm:pl-4">
                 {feedback.questions.map((question, qIndex) => (
-                  <div key={question.id} className="mb-3 flex justify-between ">
-                    <p className="text-sm font-medium">
-                      {"Q"}
-                      {qIndex + 1}) {question.question}{" "}
-                      <span className="text-red-500">*</span>
-                    </p>
-                    <div className="flex gap-1 h-full ">
+                  <div key={question.id} className="mb-3 flex justify-between">
+                    <div className="flex gap-2 w-11/12">
+                      <p className="text-sm font-medium">
+                        {"Q"}
+                        {qIndex + 1})
+                      </p>
+                      <p className="text-sm font-medium">
+                        {question.question}{" "}
+                        <span className="text-red-500">*</span>
+                      </p>
+                    </div>
+                    <div className="flex gap-1 h-full w-6/12 sm:w-3/12">
                       <select
-                        className="sm:p-1 border rounded-md text-sm border-gray-400"
+                        className="sm:p-1 border rounded-md text-sm border-gray-400 w-1/2 h-8"
                         value={responses[faculty.id]?.[qIndex] || ""}
                         onChange={(e) =>
                           handleResponseChange(
@@ -224,8 +237,14 @@ export default function FeedbackPage() {
                       >
                         <option value=""></option>
                         {feedback.ratingOptions.map((option, optIndex) => (
-                          <option key={optIndex} value={option}
-                            className={`${responses?.[faculty.id]?.includes(option) ? 'hidden' : ''}`}
+                          <option
+                            key={optIndex}
+                            value={option}
+                            className={`${
+                              responses?.[faculty.id]?.includes(option)
+                                ? "hidden"
+                                : ""
+                            }`}
                           >
                             {option}
                           </option>
@@ -233,7 +252,7 @@ export default function FeedbackPage() {
                       </select>
 
                       <select
-                        className="sm:p-1 border rounded-md text-sm border-gray-400"
+                        className="sm:p-1 border rounded-md text-sm border-gray-400 w-1/2"
                         onChange={(e) => {
                           // Logic goes here
                         }}
@@ -265,10 +284,11 @@ export default function FeedbackPage() {
                   });
                 }
               }}
-              className={`text-white px-4 py-2 rounded-md  transition ${nextFaculty == 0
-                ? "bg-gray-600"
-                : "bg-blue-600 hover:bg-blue-500"
-                } ${nextFaculty == 0 ? "cursor-not-allowed" : "bg-blue-600"}`}
+              className={`text-white px-4 py-2 rounded-md  transition ${
+                nextFaculty == 0
+                  ? "bg-gray-600"
+                  : "bg-blue-600 hover:bg-blue-500"
+              } ${nextFaculty == 0 ? "cursor-not-allowed" : "bg-blue-600"}`}
               disabled={nextFaculty == 0}
             >
               Previous Faculty
@@ -291,10 +311,11 @@ export default function FeedbackPage() {
                     alert("Please answer all questions before proceeding!");
                   }
                 }}
-                className={`text-white px-4 py-2 rounded-md transition ${nextFaculty === feedback.faculties.length - 1
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-500"
-                  }`}
+                className={`text-white px-4 py-2 rounded-md transition ${
+                  nextFaculty === feedback.faculties.length - 1
+                    ? "bg-gray-600 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-500"
+                }`}
                 disabled={nextFaculty === feedback.faculties.length - 1}
               >
                 Next Faculty
