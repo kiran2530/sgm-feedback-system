@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import { useFeedback } from "@/context/FeedbackContext";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import FeedbackPDF from "../../components/FeedbackPDF";
+// import FeedbackPDF from "../../components/FeedbackPDF";
+import { generateExcel } from "../../utils/generateExcel";
 
 interface Rating {
   q1: number;
@@ -28,7 +29,7 @@ interface Rating {
 }
 
 interface Faculties {
-  id:number,
+  id: number;
   name: string;
   totalAvarage: number;
   subject: string;
@@ -402,7 +403,7 @@ export default function Page() {
               ))}
             </div>
             <div className="flex justify-end mt-14">
-              <PDFDownloadLink
+              {/* <PDFDownloadLink
                 document={<FeedbackPDF selectedFeedback={selectedFeedback} />}
                 fileName={`${
                   selectedFeedback.academicYear +
@@ -421,7 +422,14 @@ export default function Page() {
                     </button>
                   )
                 }
-              </PDFDownloadLink>
+              </PDFDownloadLink> */}
+
+              <button
+                onClick={() => generateExcel(selectedFeedback)}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Generate Excel
+              </button>
             </div>
           </div>
         </div>
