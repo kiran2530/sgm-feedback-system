@@ -1,25 +1,27 @@
 export type FeedbackForm = {
     id: string;
-    department_id: string;
-    faculty_id: string;
-    subject_id: string;
-    due_date: string;
-    feedback_count: number;
-    title: string;
-    feedback_creator: string;
-    feedback_codes: string[]
+    created_at: string;
+    academic_year: string;
+    department: string;
+    class: string;
+    semester: string;
+    term: string;
+    faculty_with_subject: string[]; // ["sam:DBMS", "Harry:DotNet"]
+    unique_codes: string[]
 }
 
-type response = {
-    questNo: number;
-    rating: string;
-}
+// export type FeedbackSubmission = {
+//     id: string;
+//     faculty_id: string;
+//     subject_id: string;
+//     responses: response[]
+//     feedback_code: string;
+// }
 
-export type FeedbackSubmission = {
+
+
+export type Response = {
     id: string;
-    faculty_id: string;
-    subject_id: string;
-    responses: response[]
-    feedback_code: string;
+
 }
 
