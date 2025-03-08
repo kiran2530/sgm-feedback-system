@@ -1,52 +1,25 @@
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-
-interface Rating {
-  q1: number;
-  q2: number;
-  q3: number;
-  q4: number;
-  q5: number;
-  q6: number;
-  q7: number;
-  q8: number;
-  q9: number;
-  q10: number;
-}
-
-interface Faculties {
-  name: string;
-  totalAvarage: number;
-  subject: string;
-  rating: Rating;
-}
-
-interface Questions {
-  id: number;
-  question: string;
-}
-
-interface Feedback {
-  id: number;
-  academicYear: string;
-  department: string;
-  class: string;
-  semester: string;
-  term: string;
-  title: string;
-  date: string;
-  faculties: Faculties[];
-  questions: Questions[];
-  ratingOptions: number[];
-}
+import { Feedback } from "@/types";
+import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
 
 export const generateExcel = (selectedFeedback: Feedback) => {
-  const { academicYear, department, class: className, semester, term, title, date, faculties } = selectedFeedback;
+  const {
+    academic_year,
+    department,
+    class: className,
+    semester,
+    term,
+    feedback_title,
+    date,
+    faculty_with_subject,
+    weights,
+  } = selectedFeedback;
 
   // Header Information (Centered & Merged)
   const sheetData = [
-    [`${title}`], // Title
-    [`Academic Year: ${academicYear}`],
+    [`${feedback_title}`], // Title
+    [`Academic Year: ${academic_year}`],
     [`Department: ${department}`],
     [`Class: ${className}`],
     [`Semester: ${semester}`],
@@ -56,36 +29,38 @@ export const generateExcel = (selectedFeedback: Feedback) => {
     [
       "Faculty Name",
       "Subject",
-      "Q1) "+selectedFeedback.questions[0].question,
-      "Q2) "+selectedFeedback.questions[1].question,
-      "Q3) "+selectedFeedback.questions[2].question,
-      "Q4) "+selectedFeedback.questions[3].question,
-      "Q5) "+selectedFeedback.questions[4].question,
-      "Q6) "+selectedFeedback.questions[5].question,
-      "Q7) "+selectedFeedback.questions[6].question,
-      "Q8) "+selectedFeedback.questions[7].question,
-      "Q9) "+selectedFeedback.questions[8].question,
-      "Q10) "+selectedFeedback.questions[9].question,
+      "Q1) " + feedbackQuestions[0].question,
+      "Q2) " + feedbackQuestions[1].question,
+      "Q3) " + feedbackQuestions[2].question,
+      "Q4) " + feedbackQuestions[3].question,
+      "Q5) " + feedbackQuestions[4].question,
+      "Q6) " + feedbackQuestions[5].question,
+      "Q7) " + feedbackQuestions[6].question,
+      "Q8) " + feedbackQuestions[7].question,
+      "Q9) " + feedbackQuestions[8].question,
+      "Q10) " + feedbackQuestions[9].question,
       "Total Average",
     ], // Table headers
   ];
 
   // Append faculty data
-  faculties.forEach((faculty) => {
+  faculty_with_subject.forEach((faculty) => {
+    const [facultyName, facultySubject] = faculty.split(":"); // Splitting faculty name and subject
+
     sheetData.push([
-      faculty.name,
-      faculty.subject,
-      faculty.rating.q1.toString(),
-      faculty.rating.q2.toString(),
-      faculty.rating.q3.toString(),
-      faculty.rating.q4.toString(),
-      faculty.rating.q5.toString(),
-      faculty.rating.q6.toString(),
-      faculty.rating.q7.toString(),
-      faculty.rating.q8.toString(),
-      faculty.rating.q9.toString(),
-      faculty.rating.q10.toString(),
-      faculty.totalAvarage.toFixed(2),
+      facultyName,
+      facultySubject,
+      (weights?.[0]?.[0] ?? "NA").toString(),
+      (weights?.[0]?.[1] ?? "NA").toString(),
+      (weights?.[0]?.[2] ?? "NA").toString(),
+      (weights?.[0]?.[3] ?? "NA").toString(),
+      (weights?.[0]?.[4] ?? "NA").toString(),
+      (weights?.[0]?.[5] ?? "NA").toString(),
+      (weights?.[0]?.[6] ?? "NA").toString(),
+      (weights?.[0]?.[7] ?? "NA").toString(),
+      (weights?.[0]?.[8] ?? "NA").toString(),
+      (weights?.[0]?.[9] ?? "NA").toString(),
+      "NA",
     ]);
   });
 
@@ -111,21 +86,29 @@ export const generateExcel = (selectedFeedback: Feedback) => {
   ws["!cols"] = [
     { wch: 20 }, // Faculty Name
     { wch: 25 }, // Subject
-    { wch: 5 },  // Q1
-    { wch: 5 },  // Q2
-    { wch: 5 },  // Q3
-    { wch: 5 },  // Q4
-    { wch: 5 },  // Q5
-    { wch: 5 },  // Q6
-    { wch: 5 },  // Q7
-    { wch: 5 },  // Q8
-    { wch: 5 },  // Q9
-    { wch: 5 },  // Q10
+    { wch: 5 }, // Q1
+    { wch: 5 }, // Q2
+    { wch: 5 }, // Q3
+    { wch: 5 }, // Q4
+    { wch: 5 }, // Q5
+    { wch: 5 }, // Q6
+    { wch: 5 }, // Q7
+    { wch: 5 }, // Q8
+    { wch: 5 }, // Q9
+    { wch: 5 }, // Q10
     { wch: 15 }, // Total Average
   ];
 
   // Save file
   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
   const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-  saveAs(data, `${selectedFeedback.academicYear + selectedFeedback.department + selectedFeedback.class + '.xlsx'}`);
+  saveAs(
+    data,
+    `${
+      selectedFeedback.academic_year +
+      selectedFeedback.department +
+      selectedFeedback.class +
+      ".xlsx"
+    }`
+  );
 };

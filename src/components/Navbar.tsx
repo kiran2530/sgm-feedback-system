@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { Plus, X, User, LogOut } from "lucide-react";
 import collegeLogo from "../../public/collegeImage.png";
 import Image from "next/image";
-import { useFeedback } from "@/context/FeedbackContext";
+import { Feedback } from "@/types";
+import { createFeedbackFormAction } from "@/actions/feedbacks";
 
 const feedbackQuestions = [
   {
@@ -82,8 +83,6 @@ const feedbackQuestions = [
 // ];
 
 const Navbar = () => {
-  const { MOCK_DATA, setMOCK_DATA } = useFeedback();
-
   const pathname = usePathname();
 
   const initialYears: string[] = [];
@@ -121,138 +120,41 @@ const Navbar = () => {
   };
 
   // Handle Creating Feedback
-  const createFeedback = () => {
-    setDId(dId + 1);
-    const date = new Date().toISOString().split("T")[0]; // Get formatted date (YYYY-MM-DD)
-    let id = fId;
+  const createFeedback = async () => {
+    // Construct faculty_with_subject array
+    const facultyWithSubjects = faculties.map((f) => `${f.name}:${f.subject}`);
 
-    const newFeedback = {
-      id: dId,
-      academicYear,
+    // Initialize weights and rating as empty arrays for each faculty
+    const weights: Record<string, number[][]> = {};
+    const rating: Record<string, number[][]> = {};
+
+    facultyWithSubjects.forEach((faculty) => {
+      weights[faculty] = [];
+      rating[faculty] = [];
+    });
+
+    // Create feedback data
+    const newFeedback: Omit<Feedback, "id"> = {
+      academic_year: academicYear,
       department,
-      class: classLevel, // Ensure key matches existing structure
+      class: classLevel,
       semester,
       term,
-      title: feedbackName, // Assuming title corresponds to feedbackName
-      date,
-      faculties: faculties.map((faculty) => ({
-        ...faculty,
-        id: ++id,
-        totalAvarage: 0.0,
-        rating: {
-          q1: 0.0,
-          q2: 0.0,
-          q3: 0.0,
-          q4: 0.0,
-          q5: 0.0,
-          q6: 0.0,
-          q7: 0.0,
-          q8: 0.0,
-          q9: 0.0,
-          q10: 0.0,
-        },
-      })),
-      questions: [
-        {
-          id: 1,
-          question:
-            "How would you rate the overall teaching effectiveness of the faculty?",
-        },
-        {
-          id: 2,
-          question: "How well does the faculty explain complex topics?",
-        },
-        {
-          id: 3,
-          question: "Does the faculty encourage student participation?",
-        },
-        {
-          id: 4,
-          question: "How clear are the faculty’s explanations during lectures?",
-        },
-        {
-          id: 5,
-          question: "How responsive is the faculty to students' queries?",
-        },
-        { id: 6, question: "How well does the faculty manage class time?" },
-        {
-          id: 7,
-          question:
-            "Does the faculty provide relevant examples while teaching?",
-        },
-        {
-          id: 8,
-          question:
-            "How effective are the faculty's assessment and grading methods?",
-        },
-        {
-          id: 9,
-          question:
-            "Does the faculty provide sufficient study materials and references?",
-        },
-        {
-          id: 10,
-          question: "How well does the faculty encourage critical thinking?",
-        },
-        {
-          id: 11,
-          question: "How approachable is the faculty outside of class hours?",
-        },
-        {
-          id: 12,
-          question: "Does the faculty use modern teaching methods effectively?",
-        },
-        {
-          id: 13,
-          question:
-            "How satisfied are you with the faculty's subject knowledge?",
-        },
-        {
-          id: 14,
-          question:
-            "Does the faculty provide constructive feedback on assignments?",
-        },
-        {
-          id: 15,
-          question:
-            "How well does the faculty connect theoretical concepts to practical applications?",
-        },
-        {
-          id: 16,
-          question: "Does the faculty create an engaging learning environment?",
-        },
-        {
-          id: 17,
-          question: "How effective are the faculty’s communication skills?",
-        },
-        {
-          id: 18,
-          question:
-            "How satisfied are you with the faculty's classroom management?",
-        },
-        {
-          id: 19,
-          question: "Does the faculty encourage teamwork and collaboration?",
-        },
-        {
-          id: 20,
-          question: "Would you recommend this faculty to other students?",
-        },
-      ],
-      ratingOptions: [
-        0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5,
-        13.5, 14.5, 15.5, 16.5, 17.5, 18.5, 19.5,
-      ],
+      feedback_title: feedbackName,
+      faculty_with_subject: facultyWithSubjects,
+      created_at: new Date().toISOString(),
+      date: new Date(),
+      unique_codes: ["ABC123", "XYZ789", "PQR456"],
+      weights: weights,
+      rating: rating,
     };
 
-    // Update MOCK_DATA by adding the new feedback
-    setMOCK_DATA([...MOCK_DATA, newFeedback]);
+    console.log("k");
 
-    setFId(id);
+    const data = await createFeedbackFormAction(newFeedback);
 
-    //alert("Feedback Created Successfully!");
-
-    console.log(MOCK_DATA);
+    console.log("k");
+    console.log("Created Feedback Data:", data);
 
     // Reset form fields
     setAcademicYear("");
@@ -262,6 +164,8 @@ const Navbar = () => {
     setFeedbackName("");
     setFaculties([]);
     setIsDialogOpen(false);
+
+    // TODO: Pass `newFeedback` to API or store state
   };
 
   return (
