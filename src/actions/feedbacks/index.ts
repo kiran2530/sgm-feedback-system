@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use server"
+"use server";
 
-import { FeedbackForm } from "@/types";
+import { Feedback } from "@/types";
 import { createClient } from "@/utils/supabase/server";
-import { supabase } from '../../utils/supabase/client';
+import { supabase } from "../../utils/supabase/client";
 import { error } from "console";
 
 // export const createNewFeedbackAction = async (feedbackForm: FeedbackForm) => {
@@ -125,181 +125,266 @@ import { error } from "console";
 // }
 
 const createFeedbackCodes = (feedbackCount: number): string[] => {
-    try {
-        const codes = new Set<string>();
+  try {
+    const codes = new Set<string>();
 
-        while (codes.size < feedbackCount) {
-            const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-            const number = Math.floor(Math.random() * 90) + 10;
-            const code = `${letter}${number}`;
+    while (codes.size < feedbackCount) {
+      const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      const number = Math.floor(Math.random() * 90) + 10;
+      const code = `${letter}${number}`;
 
-            codes.add(code);
-        }
-
-        return Array.from(codes);
-    } catch (error) {
-        console.log('Error in createFeedbackCodes:', error);
-        return [];
+      codes.add(code);
     }
+
+    return Array.from(codes);
+  } catch (error) {
+    console.log("Error in createFeedbackCodes:", error);
+    return [];
+  }
 };
 
-export const createFeedbackFormAction = async (feedbackForm: FeedbackForm) => {
-    try {
-        //facult
-        const supabase = await createClient();
-        const feedbackCodes = createFeedbackCodes(20);
-        feedbackForm.unique_codes = feedbackCodes;
-        const { data, error } = await supabase
-            .from("feedback_forms")
-            .insert([
-                feedbackForm
-            ])
-            .select();
-        if (error) {
-            return {
-                success: false,
-                message: `error in createFeedbackFormAction : ${error}`
-            }
-        }
-        return {
-            success: true,
-            data: data
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: `error in createFeedbackFormAction : ${error}`
-        }
+export const createFeedbackFormAction = async (
+  feedbackForm: Omit<Feedback, "id">
+) => {
+  try {
+    //facult
+    const supabase = await createClient();
+    const feedbackCodes = createFeedbackCodes(20);
+    feedbackForm.unique_codes = feedbackCodes;
+    const { data, error } = await supabase
+      .from("feedback")
+      .insert([feedbackForm])
+      .select();
+    if (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
     }
-}
-
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `error in createFeedbackFormAction : ${error}`,
+    };
+  }
+};
 
 export const getFeedbackByAcademicYearAction = async (academicYear: string) => {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("feedback_forms")
-            .select("*")
-            .eq("academic_year", academicYear);
-        if (error) {
-            return {
-                success: false,
-                message: `error in getFeedbackByAcademicYearAction : ${error}`
-            }
-        }
-        return {
-            success: true,
-            data
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: `error in getFeedbackByAcademicYearAction : ${error}`
-        }
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .eq("academic_year", academicYear);
+    if (error) {
+      return {
+        success: false,
+        message: `error in getFeedbackByAcademicYearAction : ${error}`,
+      };
     }
-}
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `error in getFeedbackByAcademicYearAction : ${error}`,
+    };
+  }
+};
 
-export const getFeedbackFromsByAcademicYearAndDepartmentAction = async (academicYear: string, department: string) => {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("feedback_forms")
-            .select("*")
-            .eq("academic_year", academicYear)
-            .eq("department", department)
-        if (error) {
-            return {
-                success: false,
-                message: `error in getFeedbackFromsByAcademicYearAndDepartmentAction : ${error}`
-            }
-        }
-        return {
-            success: true,
-            data
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: `error in getFeedbackFromsByAcademicYearAndDepartmentAction : ${error}`
-        }
+// export const getFeedbackFromsByAcademicYearAndDepartmentAction = async (
+//   academicYear: string,
+//   department: string
+// ) => {
+//   try {
+//     const supabase = await createClient();
+//     const { data, error } = await supabase
+//       .from("feedback_forms")
+//       .select("*")
+//       .eq("academic_year", academicYear)
+//       .eq("department", department);
+//     if (error) {
+//       return {
+//         success: false,
+//         message: `error in getFeedbackFromsByAcademicYearAndDepartmentAction : ${error}`,
+//       };
+//     }
+//     return {
+//       success: true,
+//       data,
+//     };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: `error in getFeedbackFromsByAcademicYearAndDepartmentAction : ${error}`,
+//     };
+//   }
+// };
+
+export const getFeedbackFormsWithAcademicYearDepartmentClassWiseAction = async (
+  academicYear: string,
+  department: string,
+  classs: string
+) => {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .eq("academic_year", academicYear)
+      .eq("department", department)
+      .eq("class", classs);
+    if (error) {
+      return {
+        success: false,
+        message: `error in getFeedbackFormsWithAcademicYearDepartmentClassWiseAction : ${error}`,
+      };
     }
-}
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `error in getFeedbackFormsWithAcademicYearDepartmentClassWiseAction : ${error}`,
+    };
+  }
+};
 
-export const getFeedbackFormsWithAcademicYearDepartmentClassWiseAction = async (academicYear: string, department: string, classs: string) => {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("feedback_forms")
-            .select("*")
-            .eq("academic_year", academicYear)
-            .eq("department", department)
-            .eq("class", classs)
-        if (error) {
-            return {
-                success: false,
-                message: `error in getFeedbackFormsWithAcademicYearDepartmentClassWiseAction : ${error}`
-            }
-        }
-        return {
-            success: true,
-            data
-        }
+// export const getFeedbackByDepartmentAndClassAction = async (
+//   department: string,
+//   classs: string
+// ) => {
+//   try {
+//     const supabase = await createClient();
+//     const { data, error } = await supabase
+//       .from("feedback_forms")
+//       .select("*")
+//       .eq("department", department)
+//       .eq("class", classs);
+//     if (error) {
+//       return {
+//         success: false,
+//         message: `error in getFeedbackByDepartmentAndClassAction : ${error}`,
+//       };
+//     }
+//     return {
+//       success: true,
+//       data,
+//     };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: `error in getFeedbackByDepartmentAndClassAction : ${error}`,
+//     };
+//   }
+// };
 
-    } catch (error) {
-        return {
-            success: false,
-            message: `error in getFeedbackFormsWithAcademicYearDepartmentClassWiseAction : ${error}`
-        }
+export const getFeedbackByIdAction = async (feedbackId: string) => {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .eq("id", feedbackId);
+    if (error) {
+      return {
+        success: false,
+        message: `error in getFeedbackByIdAction : ${error}`,
+      };
     }
-}
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `error in getFeedbackByIdAction : ${error}`,
+    };
+  }
+};
 
-export const getFeedbackByDepartmentAndClassAction = async (department: string, classs: string) => {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("feedback_forms")
-            .select("*")
-            .eq("department", department)
-            .eq("class", classs)
-        if (error) {
-            return {
-                success: false,
-                message: `error in getFeedbackByDepartmentAndClassAction : ${error}`
-            }
-        }
-        return {
-            success: true,
-            data
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: `error in getFeedbackByDepartmentAndClassAction : ${error}`
-        }
-    }
-}
+// For updating the response of students.
+export const updateFeedbackWeightsAndRatings = async (
+  feedbackId: string,
+  facultyNameWithWeights: { [facultyName: string]: number[] },
+  facultyNameWithRating: { [facultyName: string]: number[] }
+) => {
+  try {
+    const supabase = await createClient();
 
-export const getFeedbackByIdAction = async (feedbackId: number) => {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("feedbakc_form")
-            .select("*")
-            .eq("id", feedbackId)
-        if (error) {
-            return {
-                success: false,
-                message: `error in getFeedbackByIdAction : ${error}`
-            }
-        }
-        return {
-            success: true,
-            data
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: `error in getFeedbackByIdAction : ${error}`
-        }
+    // Fetch existing feedback data
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("weights, rating")
+      .eq("id", feedbackId)
+      .single();
+
+    if (error) {
+      return {
+        success: false,
+        message: `Error fetching feedback: ${error.message}`,
+      };
     }
-}
+
+    if (!data) {
+      return {
+        success: false,
+        message: "Feedback not found",
+      };
+    }
+
+    // Parse existing weights and ratings, ensuring they are structured as number[][] (2D arrays)
+    let updatedWeights: { [faculty_name: string]: number[][] } =
+      data.weights || {};
+    let updatedRatings: { [faculty_name: string]: number[][] } =
+      data.rating || {};
+
+    // Update or add faculty data
+    for (const facultyName in facultyNameWithWeights) {
+      updatedWeights[facultyName] = updatedWeights[facultyName]
+        ? [...updatedWeights[facultyName], facultyNameWithWeights[facultyName]] // Append as a new row
+        : [facultyNameWithWeights[facultyName]]; // Initialize with the new array
+    }
+
+    for (const facultyName in facultyNameWithRating) {
+      updatedRatings[facultyName] = updatedRatings[facultyName]
+        ? [...updatedRatings[facultyName], facultyNameWithRating[facultyName]] // Append as a new row
+        : [facultyNameWithRating[facultyName]]; // Initialize with the new array
+    }
+
+    // Update the feedback entry in Supabase
+    const { error: updateError } = await supabase
+      .from("feedback")
+      .update({
+        weights: updatedWeights,
+        rating: updatedRatings,
+      })
+      .eq("id", feedbackId);
+
+    if (updateError) {
+      return {
+        success: false,
+        message: `Error updating feedback: ${updateError.message}`,
+      };
+    }
+
+    return {
+      success: true,
+      message: "Feedback updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Unexpected error: ${error}`,
+    };
+  }
+};
