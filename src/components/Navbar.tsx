@@ -90,8 +90,6 @@ const Navbar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  const [dId, setDId] = useState(6);
-  const [fId, setFId] = useState(14);
   const [academicYear, setAcademicYear] = useState("");
   const [feedbackName, setFeedbackName] = useState("");
   const [department, setDepartment] = useState("");

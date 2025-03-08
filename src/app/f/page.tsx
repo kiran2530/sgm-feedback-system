@@ -13,7 +13,7 @@ export default function Page() {
   const initialYears: string[] = [];
   const [years, setYears] = useState(initialYears);
   const [academicYear, setAcademicYear] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [feedbackData, setFeedbackData] = useState<Feedback[]>([]);
 
   // useEffcet for fetching years
@@ -29,63 +29,10 @@ export default function Page() {
     setYears(yearList);
   }, []);
 
-  // Sample feedback data (Replace with actual API data)
-  const allFeedbacks = [
-    {
-      id: "101",
-      academic_year: "2024-25",
-      department: "Computer Science",
-      class: "Final Year",
-      semester: "8",
-      term: "Odd",
-      feedback_title: "Feb 2024",
-      faculty_with_subject: [
-        "Kiran:DBA",
-        "John:Data Structures",
-        "Emma:Operating Systems",
-      ],
-      createAt: "2024",
-      unique_codes: ["ABC123", "XYZ789", "PQR456"],
-      weights: {
-        "Kiran:DBA": [
-          [
-            0.5, 0, 2.5, 0, 4.5, 0, 6.5, 0, 8.5, 0, 10.5, 0, 12.5, 0, 14.5, 0,
-            16.5, 0, 18.5, 0,
-          ],
-        ],
-        "John:Data Structures": [
-          [
-            0, 1.5, 0, 3.5, 0, 5.5, 0, 7.5, 0, 9.5, 0, 11.5, 0, 13.5, 0, 15.5,
-            0, 17.5, 0, 19.5,
-          ],
-        ],
-        "Emma:Operating Systems": [
-          [
-            0, 0, 2.5, 0, 0, 5.5, 0, 0, 8.5, 0, 0, 11.5, 0, 0, 14.5, 0, 0, 17.5,
-            0, 19.5,
-          ],
-        ],
-      },
-      rating: {
-        "Kiran:DBA": [
-          [3, 4, 5, 4, 5],
-          [4, 5, 3, 4, 4],
-        ],
-        "John:Data Structures": [
-          [5, 5, 4, 3, 4],
-          [4, 3, 5, 4, 5],
-        ],
-        "Emma:Operating Systems": [
-          [4, 3, 4, 5, 5],
-          [5, 4, 4, 3, 4],
-        ],
-      },
-    },
-  ];
 
   // Function for fetching feedbacks
   const fetchFeedback = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     if (!academicYear) return; // Prevents unnecessary calls if academicYear is empty
 
     try {
@@ -103,9 +50,9 @@ export default function Page() {
         console.log(response.message);
       }
     } catch (err) {
-      console.log("Failed to fetch feedback data.");
+      console.log("Failed to fetch feedback data." + err);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
