@@ -47,7 +47,7 @@ export default function FeedbackPage() {
     };
 
     fetchFeedback();
-  }, []);
+  }, [feedbackIdStr]);
 
   const [weights, setWeights] = useState<{ [key: string]: number[] }>({});
   const [rating, setRating] = useState<{ [key: string]: number[] }>({});

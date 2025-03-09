@@ -343,9 +343,9 @@ export const updateFeedbackWeightsAndRatings = async (
     }
 
     // Parse existing weights and ratings, ensuring they are structured as number[][] (2D arrays)
-    let updatedWeights: { [faculty_name: string]: number[][] } =
+    const updatedWeights: { [faculty_name: string]: number[][] } =
       data.weights || {};
-    let updatedRatings: { [faculty_name: string]: number[][] } =
+    const updatedRatings: { [faculty_name: string]: number[][] } =
       data.rating || {};
 
     // Update or add faculty data

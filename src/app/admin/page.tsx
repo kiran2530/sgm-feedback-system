@@ -29,8 +29,7 @@ export default function Page() {
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(
     null
   );
-  const [expandedResponses, setExpandedResponses] = useState<number[]>([]);
-  []; // Added state for expanded rows
+  const [expandedResponses, setExpandedResponses] = useState<number[]>([]); // Added state for expanded rows
 
   // State for loading
   const [isLoading, setIsLoading] = useState(false);
@@ -139,7 +138,7 @@ export default function Page() {
 
     console.log(averageWeights);
     console.log(averageRatings);
-  }, [selectedFeedback]);
+  }, [selectedFeedback, averageRatings, averageWeights]);
 
   // Function to calculate the faculty-wise average
   const calculateFacultyAverages = (
