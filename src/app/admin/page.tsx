@@ -59,7 +59,7 @@ export default function Page() {
   // for fetching academic year
   useEffect(() => {
     const currentYear = new Date().getFullYear();
-    const startYear = 2022; // Adjust this as per requirement
+    const startYear = 2024; // Adjust this as per requirement
     const yearList = [];
 
     for (let year = startYear; year <= currentYear; year++) {
@@ -138,7 +138,7 @@ export default function Page() {
 
     console.log(averageWeights);
     console.log(averageRatings);
-  }, [selectedFeedback, averageRatings, averageWeights]);
+  }, [selectedFeedback]);
 
   // Function to calculate the faculty-wise average
   const calculateFacultyAverages = (
@@ -156,7 +156,9 @@ export default function Page() {
         return acc.map((sum, index) => sum + curr[index]);
       }, new Array(values[0].length).fill(0));
 
-      facultyAverages[faculty] = sumArray.map((sum) => sum / numEntries);
+      facultyAverages[faculty] = sumArray.map((sum: number) =>
+        parseFloat((sum / numEntries).toFixed(2))
+      );
     });
 
     return facultyAverages;
@@ -186,7 +188,7 @@ export default function Page() {
     Object.entries(obj).forEach(([key, values]) => {
       if (values.length > 0) {
         const sum = values.reduce((acc, curr) => acc + curr, 0);
-        averages[key] = sum / values.length;
+        averages[key] = parseFloat((sum / values.length).toFixed(2));
       } else {
         averages[key] = 0; // Handle empty arrays by setting average to 0
       }
@@ -356,21 +358,27 @@ export default function Page() {
               {/* Basic Info Section */}
               <div className="bg-gray-200 p-4 rounded-lg border">
                 <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Department :</span>
+                  <div className="flex gap-2">
+                    <span className="text-gray-600">Department : </span>
                     <span>{selectedFeedback.department}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex gap-2">
                     <span className="text-gray-600">Class :</span>
                     <span>{selectedFeedback.class}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex gap-2">
                     <span className="text-gray-600">Semester :</span>
                     <span>{selectedFeedback.semester}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex gap-2">
                     <span className="text-gray-600">Date :</span>
                     <span>{selectedFeedback.date.toString()}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="text-gray-600">Total Responses :</span>
+                    <span>
+                      {Object.values(selectedFeedback.rating)[0]?.length}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -526,8 +534,14 @@ export default function Page() {
               </PDFDownloadLink> */}
 
                 <button
-                  onClick={() => generateExcel(selectedFeedback)}
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  onClick={() =>
+                    generateExcel(
+                      selectedFeedback,
+                      averageWeights,
+                      averageRatings
+                    )
+                  }
+                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-2"
                 >
                   Generate Excel
                 </button>

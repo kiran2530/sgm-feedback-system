@@ -102,7 +102,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const currentYear = new Date().getFullYear();
-    const startYear = 2022; // Adjust this as per requirement
+    const startYear = 2024; // Adjust this as per requirement
     const yearList = [];
 
     for (let year = startYear; year <= currentYear; year++) {
