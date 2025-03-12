@@ -43,9 +43,9 @@ export const generateExcel = (
   ];
 
   // Faculty Data (Merging Rows)
-  const merges: any[] = [];
+  const merges: XLSX.Range[] = [];
 
-  faculty_with_subject.forEach((faculty, rowIndex) => {
+  faculty_with_subject.forEach((faculty) => {
     const [facultyName, facultySubject] = faculty.split(":"); // Extract faculty and subject
 
     const weights =
