@@ -3,7 +3,15 @@ import { saveAs } from "file-saver";
 import { Feedback } from "@/types";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
 
-export const generateExcel = (selectedFeedback: Feedback) => {
+interface FacultyWeightsRating {
+  [facultyName: string]: number[];
+}
+
+export const generateExcel = (
+  selectedFeedback: Feedback,
+  averageWeights: FacultyWeightsRating,
+  averageRatings: FacultyWeightsRating
+) => {
   const {
     academic_year,
     department,
@@ -13,10 +21,9 @@ export const generateExcel = (selectedFeedback: Feedback) => {
     feedback_title,
     date,
     faculty_with_subject,
-    weights,
   } = selectedFeedback;
 
-  // Header Information (Centered & Merged)
+  // Header Section with Merged Rows
   const sheetData = [
     [`${feedback_title}`], // Title
     [`Academic Year: ${academic_year}`],
@@ -29,39 +36,53 @@ export const generateExcel = (selectedFeedback: Feedback) => {
     [
       "Faculty Name",
       "Subject",
-      "Q1) " + feedbackQuestions[0].question,
-      "Q2) " + feedbackQuestions[1].question,
-      "Q3) " + feedbackQuestions[2].question,
-      "Q4) " + feedbackQuestions[3].question,
-      "Q5) " + feedbackQuestions[4].question,
-      "Q6) " + feedbackQuestions[5].question,
-      "Q7) " + feedbackQuestions[6].question,
-      "Q8) " + feedbackQuestions[7].question,
-      "Q9) " + feedbackQuestions[8].question,
-      "Q10) " + feedbackQuestions[9].question,
+      "Type", // New column for Type (Rating/Weight)
+      ...feedbackQuestions.map((value) => `Q${value.id}) ${value.question}`),
       "Total Average",
-    ], // Table headers
+    ],
   ];
 
-  // Append faculty data
-  faculty_with_subject.forEach((faculty) => {
-    const [facultyName, facultySubject] = faculty.split(":"); // Splitting faculty name and subject
+  // Faculty Data (Merging Rows)
+  const merges: any[] = [];
 
+  faculty_with_subject.forEach((faculty, rowIndex) => {
+    const [facultyName, facultySubject] = faculty.split(":"); // Extract faculty and subject
+
+    const weights =
+      averageWeights[faculty] || Array(feedbackQuestions.length).fill("NA");
+    const ratings =
+      averageRatings[faculty] || Array(feedbackQuestions.length).fill("NA");
+
+    // Calculate total averages
+    const totalWeight =
+      weights.reduce((sum, w) => (typeof w === "number" ? sum + w : sum), 0) /
+      feedbackQuestions.length;
+    const totalRating =
+      ratings.reduce((sum, r) => (typeof r === "number" ? sum + r : sum), 0) /
+      feedbackQuestions.length;
+
+    // Push rows for faculty (First Row: Rating, Second Row: Weight)
+    const facultyRowIndex = sheetData.length; // Current row index in the sheet
     sheetData.push([
       facultyName,
       facultySubject,
-      (weights?.[0]?.[0] ?? "NA").toString(),
-      (weights?.[0]?.[1] ?? "NA").toString(),
-      (weights?.[0]?.[2] ?? "NA").toString(),
-      (weights?.[0]?.[3] ?? "NA").toString(),
-      (weights?.[0]?.[4] ?? "NA").toString(),
-      (weights?.[0]?.[5] ?? "NA").toString(),
-      (weights?.[0]?.[6] ?? "NA").toString(),
-      (weights?.[0]?.[7] ?? "NA").toString(),
-      (weights?.[0]?.[8] ?? "NA").toString(),
-      (weights?.[0]?.[9] ?? "NA").toString(),
-      "NA",
+      "Rating",
+      ...ratings.map((r) => (typeof r === "number" ? r.toFixed(2) : "NA")),
+      totalRating.toFixed(2),
     ]);
+    sheetData.push([
+      "",
+      "",
+      "Weight",
+      ...weights.map((w) => (typeof w === "number" ? w.toFixed(2) : "NA")),
+      totalWeight.toFixed(2),
+    ]);
+
+    // Merge Faculty Name and Subject for two rows
+    merges.push(
+      { s: { r: facultyRowIndex, c: 0 }, e: { r: facultyRowIndex + 1, c: 0 } }, // Faculty Name
+      { s: { r: facultyRowIndex, c: 1 }, e: { r: facultyRowIndex + 1, c: 1 } } // Subject
+    );
   });
 
   // Create worksheet and workbook
@@ -69,46 +90,30 @@ export const generateExcel = (selectedFeedback: Feedback) => {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Feedback Report");
 
-  // Merging cells for header info (title, academic year, etc.)
-  const mergeRanges = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 12 } }, // Title
-    { s: { r: 1, c: 0 }, e: { r: 1, c: 12 } }, // Academic Year
-    { s: { r: 2, c: 0 }, e: { r: 2, c: 12 } }, // Department
-    { s: { r: 3, c: 0 }, e: { r: 3, c: 12 } }, // Class
-    { s: { r: 4, c: 0 }, e: { r: 4, c: 12 } }, // Semester
-    { s: { r: 5, c: 0 }, e: { r: 5, c: 12 } }, // Term
-    { s: { r: 6, c: 0 }, e: { r: 6, c: 12 } }, // Date
-  ];
+  // Merging title and metadata (Header spanning multiple rows)
+  merges.push(
+    { s: { r: 0, c: 0 }, e: { r: 0, c: sheetData[8].length - 1 } }, // Title
+    { s: { r: 1, c: 0 }, e: { r: 1, c: sheetData[8].length - 1 } }, // Academic Year
+    { s: { r: 2, c: 0 }, e: { r: 2, c: sheetData[8].length - 1 } }, // Department
+    { s: { r: 3, c: 0 }, e: { r: 3, c: sheetData[8].length - 1 } }, // Class
+    { s: { r: 4, c: 0 }, e: { r: 4, c: sheetData[8].length - 1 } }, // Semester
+    { s: { r: 5, c: 0 }, e: { r: 5, c: sheetData[8].length - 1 } }, // Term
+    { s: { r: 6, c: 0 }, e: { r: 6, c: sheetData[8].length - 1 } } // Date
+  );
 
-  ws["!merges"] = mergeRanges;
+  ws["!merges"] = merges;
 
   // Auto adjust column widths
   ws["!cols"] = [
     { wch: 20 }, // Faculty Name
     { wch: 25 }, // Subject
-    { wch: 5 }, // Q1
-    { wch: 5 }, // Q2
-    { wch: 5 }, // Q3
-    { wch: 5 }, // Q4
-    { wch: 5 }, // Q5
-    { wch: 5 }, // Q6
-    { wch: 5 }, // Q7
-    { wch: 5 }, // Q8
-    { wch: 5 }, // Q9
-    { wch: 5 }, // Q10
+    { wch: 10 }, // Type
+    ...Array(feedbackQuestions.length).fill({ wch: 15 }), // Q1 - Qn
     { wch: 15 }, // Total Average
   ];
 
   // Save file
   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
   const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-  saveAs(
-    data,
-    `${
-      selectedFeedback.academic_year +
-      selectedFeedback.department +
-      selectedFeedback.class +
-      ".xlsx"
-    }`
-  );
+  saveAs(data, `${academic_year}_${department}_${className}.xlsx`);
 };

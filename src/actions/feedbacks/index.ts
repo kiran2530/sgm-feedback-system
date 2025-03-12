@@ -287,6 +287,7 @@ export const getFeedbackFormsWithAcademicYearDepartmentClassWiseAction = async (
 //   }
 // };
 
+// get Feedbacks
 export const getFeedbackByIdAction = async (feedbackId: string) => {
   try {
     const supabase = await createClient();
@@ -315,6 +316,7 @@ export const getFeedbackByIdAction = async (feedbackId: string) => {
 // For updating the response of students.
 export const updateFeedbackWeightsAndRatings = async (
   feedbackId: string,
+  code: string,
   facultyNameWithWeights: { [facultyName: string]: number[] },
   facultyNameWithRating: { [facultyName: string]: number[] }
 ) => {
@@ -324,7 +326,7 @@ export const updateFeedbackWeightsAndRatings = async (
     // Fetch existing feedback data
     const { data, error } = await supabase
       .from("feedback")
-      .select("weights, rating")
+      .select("weights, rating, unique_codes")
       .eq("id", feedbackId)
       .single();
 
@@ -339,6 +341,16 @@ export const updateFeedbackWeightsAndRatings = async (
       return {
         success: false,
         message: "Feedback not found",
+      };
+    }
+
+    const unique_codes = data.unique_codes;
+
+    // Check if the code exists
+    if (!unique_codes.includes(code)) {
+      return {
+        success: false,
+        message: "Code not found in unique_codes",
       };
     }
 
@@ -361,12 +373,16 @@ export const updateFeedbackWeightsAndRatings = async (
         : [facultyNameWithRating[facultyName]]; // Initialize with the new array
     }
 
+    // Remove the code from the array
+    const updatedCodes = unique_codes.filter((c: string) => c !== code);
+
     // Update the feedback entry in Supabase
     const { error: updateError } = await supabase
       .from("feedback")
       .update({
         weights: updatedWeights,
         rating: updatedRatings,
+        unique_codes: updatedCodes,
       })
       .eq("id", feedbackId);
 
@@ -379,7 +395,7 @@ export const updateFeedbackWeightsAndRatings = async (
 
     return {
       success: true,
-      message: "Feedback updated successfully",
+      message: "Feedback Submited successfully",
     };
   } catch (error) {
     return {

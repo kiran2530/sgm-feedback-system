@@ -85,6 +85,9 @@ export default function FeedbackPage() {
   };
 
   const nextFacultySubmit = (facultyKey: string) => {
+    if (!authenticationCode) {
+      return;
+    }
     let isValid = true;
 
     feedbackQuestions.forEach((_, qIndex) => {
@@ -100,6 +103,9 @@ export default function FeedbackPage() {
   };
 
   const handleSubmit = async () => {
+    if (!authenticationCode) {
+      return;
+    }
     let isValid = true;
 
     feedbackData?.faculty_with_subject.forEach((faculty) => {
@@ -128,6 +134,7 @@ export default function FeedbackPage() {
     try {
       const response = await updateFeedbackWeightsAndRatings(
         feedbackIdStr,
+        authenticationCode,
         weights,
         rating
       );
@@ -135,15 +142,15 @@ export default function FeedbackPage() {
       if (response.success) {
         alert(response.message);
         console.log(response.message);
+        setSubmitted(true);
       } else {
+        alert(response.message);
         console.log(response.message);
       }
     } catch (err) {
       console.log("Failed to fetch feedback data.");
     } finally {
     }
-
-    setSubmitted(true);
   };
 
   const calculateAverages = (facultyKey: string) => {
