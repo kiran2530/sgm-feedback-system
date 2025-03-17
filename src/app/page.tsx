@@ -1,12 +1,21 @@
 "use client";
 import LoginModal from "@/components/LoginModal";
-import { checkLogin } from "@/utils/checkLogin";
+// import { checkLogin } from "@/utils/checkLogin";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  // const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("sgmAdminToken");
+    if (token) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
 
   return (
     <div>
@@ -21,7 +30,7 @@ export default function Home() {
             feedback efficiently.
           </p>
           <div className="flex justify-center space-x-4">
-            {checkLogin() ? (
+            {isLogin ? (
               <Link
                 href="/admin"
                 className="inline-flex items-center justify-center px-1 sm:px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 transition-colors text-sm sm:text-base"

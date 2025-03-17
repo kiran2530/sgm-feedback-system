@@ -66,6 +66,7 @@ export default function Page() {
 
       if (!token) {
         router.push("/"); // Redirect to home page if token is missing
+        window.location.reload();
       }
     }
   }, [router]);
@@ -396,9 +397,7 @@ export default function Page() {
                   </div>
 
                   <button
-                    onClick={() =>
-                      generateCodeExcel(selectedFeedback)
-                    }
+                    onClick={() => generateCodeExcel(selectedFeedback)}
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mb-2"
                   >
                     Download Codes
