@@ -303,7 +303,7 @@ export default function ForgotPasswordModal({
                   }
                   className="text-sm text-blue-500 hover:underline"
                 >
-                  Didn't receive the code? Resend
+                  Did not receive the code? Resend
                 </button>
               </div>
             </div>

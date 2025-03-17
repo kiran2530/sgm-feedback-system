@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { X } from "lucide-react";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import { loginAdmin } from "@/actions/auth/login";
@@ -51,6 +51,7 @@ export default function LoginModal({
         // Close modal
         onClose();
         console.log("Token : ", localStorage.getItem("sgmAdminToken"));
+        window.location.reload();
       }
       alert(data.message);
     }
