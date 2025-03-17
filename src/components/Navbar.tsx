@@ -1,13 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-import { Plus, X, User, LogOut } from "lucide-react";
+import { Plus, X, User, LogOut, Settings } from "lucide-react";
 import collegeLogo from "../../public/collegeImage.png";
 import Image from "next/image";
 import { Feedback } from "@/types";
 import { createFeedbackFormAction } from "@/actions/feedbacks";
+import LoginModal from "./LoginModal";
+import AdminRegistrationModal from "./AdminRegistrationModal";
 
 const feedbackQuestions = [
   {
@@ -90,6 +92,9 @@ const Navbar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+
   const [academicYear, setAcademicYear] = useState("");
   const [feedbackName, setFeedbackName] = useState("");
   const [department, setDepartment] = useState("");
@@ -99,6 +104,28 @@ const Navbar = () => {
     { name: string; subject: string }[]
   >([]);
   const [term, setTerm] = useState("");
+
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+
+  // checking login or not
+  const router = useRouter();
+
+  useEffect(() => {
+    // Function to update state based on localStorage
+    const checkAuth = () => {
+      const token = localStorage.getItem("sgmAdminToken"); // Change "authToken" to your actual key
+      setIsLogin(!!token); // Convert token to boolean
+    };
+
+    checkAuth(); // Check on mount
+
+    // Listen for localStorage changes
+    window.addEventListener("storage", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
+  }, []);
 
   useEffect(() => {
     const currentYear = new Date().getFullYear();
@@ -147,11 +174,8 @@ const Navbar = () => {
       rating: rating,
     };
 
-    console.log("k");
-
     const data = await createFeedbackFormAction(newFeedback);
 
-    console.log("k");
     console.log("Created Feedback Data:", data);
 
     // Reset form fields
@@ -168,7 +192,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="p-2 shadow-md fixed top-0 w-full flex justify-between items-center bg-white bg-opacity-30 backdrop-blur-md">
+      <nav className="sticky top-0 bg-white shadow-md p-2 z-50">
         <div className="container mx-auto flex justify-between items-center">
           {/* Left Side: Name */}
           {/* <h1 className="text-2xl font-bold">SGM</h1> */}
@@ -177,16 +201,28 @@ const Navbar = () => {
 
           {/* Right Side: Buttons */}
           {pathname == "/" ? (
-            <div className="space-x-4">
-              <Link
-                href="/admin"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-              >
-                Admin
-              </Link>
+            <div className="space-x-4 flex">
+              {isLogin ? (
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center justify-center px-1 sm:px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                >
+                  Admin Dashboard
+                </Link>
+              ) : (
+                <div className="flex items-center">
+                  <button
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="inline-flex items-center justify-center px-1 sm:px-4 py-2 border border-transparent font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-sm sm:text-base"
+                  >
+                    Admin Login
+                  </button>
+                </div>
+              )}
+
               <Link
                 href="/f"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-md text-white transition-colors bg-green-600 hover:bg-green-700"
+                className="inline-flex items-center justify-center px-2 sm:px-4 py-2 rounded-md text-white transition-colors bg-green-600 hover:bg-green-700 text-sm sm:text-base"
               >
                 Student
               </Link>
@@ -212,13 +248,34 @@ const Navbar = () => {
 
                 {/* Dropdown - Admin Details */}
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-md rounded-md py-2 px-4">
-                    <p className="font-bold">Prof. S. S. Gurav</p>
-                    <p className="text-sm">+91 9209623553</p>
-                    <button className="mt-8 text-sm flex justify-center items-center hover:text-red-500">
-                      <LogOut className="w-5 h-5" />
-                      Logout
-                    </button>
+                  <div>
+                    <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-md rounded-md py-2">
+                      <p className="font-bold px-4">Prof. S. S. Gurav</p>
+                      <p className="text-sm px-4">+91 9209623553</p>
+
+                      <hr className="border-gray-500 mt-1" />
+                      <button
+                        onClick={() => {
+                          setIsAdminModalOpen(true);
+                        }}
+                        className="mt-4 px-4 text-sm flex justify-center items-center text-blue-600 hover:text-gray-400 font-semibold"
+                      >
+                        <Settings className="w-5 h-5 mr-1" />
+                        Add Admin
+                      </button>
+
+                      <button
+                        className="mt-2 px-4 text-sm flex justify-center items-center text-red-600 hover:text-gray-400 font-semibold"
+                        onClick={() => {
+                          localStorage.removeItem("sgmAdminToken");
+                          router.push("/");
+                          setIsLogin(false);
+                        }}
+                      >
+                        <LogOut className="w-5 h-5 mr-1" />
+                        Logout
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -227,6 +284,19 @@ const Navbar = () => {
             "student"
           )}
         </div>
+
+        {/* Login Modal */}
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onBackToLogin={() => setIsLoginModalOpen(true)}
+        />
+
+        {/* Admin Registration Modal */}
+        <AdminRegistrationModal
+          isOpen={isAdminModalOpen}
+          onClose={() => setIsAdminModalOpen(false)}
+        />
       </nav>
 
       {/* Create Feedback Dialog */}

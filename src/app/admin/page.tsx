@@ -11,10 +11,11 @@ import {
   StepBack,
 } from "lucide-react";
 // import FeedbackPDF from "../../components/FeedbackPDF";
-import { generateExcel } from "../../utils/generateExcel";
+import { generateCodeExcel, generateExcel } from "../../utils/generateExcel";
 import { Feedback } from "@/types";
 import { getFeedbackByAcademicYearAction } from "@/actions/feedbacks";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
+import { useRouter } from "next/navigation"; // ✅ Correct for App Router
 
 const departments: Record<string, string[]> = {
   "First Year": ["Div A", "Div B", "Div C"],
@@ -55,6 +56,19 @@ export default function Page() {
   const [averageRatings, setAverageRatings] = useState<FacultyWeightsRating>(
     {}
   );
+
+  // checking login or not
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("sgmAdminToken"); // Change 'authToken' to your actual key
+
+      if (!token) {
+        router.push("/"); // Redirect to home page if token is missing
+      }
+    }
+  }, [router]);
 
   // for fetching academic year
   useEffect(() => {
@@ -380,6 +394,15 @@ export default function Page() {
                       {Object.values(selectedFeedback.rating)[0]?.length}
                     </span>
                   </div>
+
+                  <button
+                    onClick={() =>
+                      generateCodeExcel(selectedFeedback)
+                    }
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mb-2"
+                  >
+                    Download Codes
+                  </button>
                 </div>
               </div>
 

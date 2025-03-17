@@ -115,5 +115,37 @@ export const generateExcel = (
   // Save file
   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
   const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-  saveAs(data, `${academic_year}_${department}_${className}.xlsx`);
+  saveAs(
+    data,
+    `feedback_Analysis_${academic_year}_${department}_${className}_sem-${selectedFeedback.semester}_${selectedFeedback.term}.xlsx`
+  );
+};
+
+export const generateCodeExcel = (selectedFeedback: Feedback) => {
+  const codes: string[] = selectedFeedback?.unique_codes;
+  if (!codes || codes.length === 0) {
+    console.error("No codes provided!");
+    return;
+  }
+
+  const sheetData: string[][] = [];
+
+  // Add codes to sheet
+  codes.forEach((code) => sheetData.push([code]));
+
+  // Create worksheet and workbook
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Codes List");
+
+  // Auto adjust column width
+  ws["!cols"] = [{ wch: 15 }];
+
+  // Save file
+  const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+  saveAs(
+    data,
+    `Unique_Codes_${selectedFeedback.academic_year}_${selectedFeedback.department}_${selectedFeedback.class}_sem-${selectedFeedback.semester}_${selectedFeedback.term}.xlsx`
+  );
 };
