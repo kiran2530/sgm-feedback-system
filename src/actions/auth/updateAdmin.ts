@@ -18,7 +18,12 @@ export const updateAdminCredentials = async (req: NextRequest) => {
       return { success: false, message: "Nothing to update" };
 
     const supabase = await createClient();
-    const updates: any = {};
+    const updates: Partial<{
+      name: string;
+      email: string;
+      phone: string;
+      password: string;
+    }> = {};
     if (name) updates.name = name;
     if (email) updates.email = email;
     if (phone) updates.phone = phone;

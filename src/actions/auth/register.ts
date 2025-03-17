@@ -19,7 +19,7 @@ export const registerAdmin = async (
 
     if (error) throw new Error(error.message);
 
-    return { success: true, message: "Admin registered successfully" };
+    return { success: true, message: "Admin registered successfully", data };
   } catch (error) {
     console.log("Error in registerAdmin:", error);
     return {

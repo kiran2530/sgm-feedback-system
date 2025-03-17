@@ -10,6 +10,7 @@ import { Feedback } from "@/types";
 import { createFeedbackFormAction } from "@/actions/feedbacks";
 import LoginModal from "./LoginModal";
 import AdminRegistrationModal from "./AdminRegistrationModal";
+import { checkLogin } from "@/utils/checkLogin";
 
 const feedbackQuestions = [
   {
@@ -93,7 +94,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
 
   const [academicYear, setAcademicYear] = useState("");
   const [feedbackName, setFeedbackName] = useState("");
@@ -109,23 +110,6 @@ const Navbar = () => {
 
   // checking login or not
   const router = useRouter();
-
-  useEffect(() => {
-    // Function to update state based on localStorage
-    const checkAuth = () => {
-      const token = localStorage.getItem("sgmAdminToken"); // Change "authToken" to your actual key
-      setIsLogin(!!token); // Convert token to boolean
-    };
-
-    checkAuth(); // Check on mount
-
-    // Listen for localStorage changes
-    window.addEventListener("storage", checkAuth);
-
-    return () => {
-      window.removeEventListener("storage", checkAuth);
-    };
-  }, []);
 
   useEffect(() => {
     const currentYear = new Date().getFullYear();
@@ -202,7 +186,7 @@ const Navbar = () => {
           {/* Right Side: Buttons */}
           {pathname == "/" ? (
             <div className="space-x-4 flex">
-              {isLogin ? (
+              {checkLogin() ? (
                 <Link
                   href="/admin"
                   className="inline-flex items-center justify-center px-1 sm:px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 transition-colors text-sm sm:text-base"
@@ -269,7 +253,6 @@ const Navbar = () => {
                         onClick={() => {
                           localStorage.removeItem("sgmAdminToken");
                           router.push("/");
-                          setIsLogin(false);
                         }}
                       >
                         <LogOut className="w-5 h-5 mr-1" />
