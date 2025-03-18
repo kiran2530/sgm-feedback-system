@@ -162,7 +162,7 @@ const Navbar = () => {
       faculty_with_subject: facultyWithSubjects,
       created_at: new Date().toISOString(),
       date: new Date(),
-      unique_codes: ["ABC123", "XYZ789", "PQR456"],
+      unique_codes: [],
       weights: weights,
       rating: rating,
     };
