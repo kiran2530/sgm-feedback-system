@@ -29,7 +29,6 @@ export default function Page() {
     setYears(yearList);
   }, []);
 
-
   // Function for fetching feedbacks
   const fetchFeedback = async () => {
     // setIsLoading(true);
@@ -108,9 +107,17 @@ export default function Page() {
                   onChange={(e) => setDepartment(e.target.value)}
                 >
                   <option value="">Select</option>
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="ECE">Electronics</option>
-                  <option value="ME">Mechanical</option>
+                  <option value="First Year">First Year</option>
+                  <option value="Computer Science">
+                    Computer Science & Engineering
+                  </option>
+                  <option value="Electronics">
+                    Electronics and Telecommunication
+                  </option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Electrical">Electrical</option>
+                  <option value="Civil">Civil</option>
+                  <option value="MCA">MCA</option>
                 </select>
               </div>
 

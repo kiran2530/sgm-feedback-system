@@ -366,6 +366,7 @@ const Navbar = () => {
                     <option value="Mechanical">Mechanical</option>
                     <option value="Electrical">Electrical</option>
                     <option value="Civil">Civil</option>
+                    <option value="MCA">MCA</option>
                   </select>
                 </div>
 
