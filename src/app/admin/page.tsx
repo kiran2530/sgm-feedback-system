@@ -9,6 +9,7 @@ import {
   X,
   Check,
   StepBack,
+  Trash,
 } from "lucide-react";
 // import FeedbackPDF from "../../components/FeedbackPDF";
 import { generateCodeExcel, generateExcel } from "../../utils/generateExcel";
@@ -16,6 +17,7 @@ import { Feedback } from "@/types";
 import { getFeedbackByAcademicYearAction } from "@/actions/feedbacks";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
 import { useRouter } from "next/navigation"; // ✅ Correct for App Router
+import UpdateFeedback from "@/components/UpdateFeedback";
 
 const departments: Record<string, string[]> = {
   "First Year": ["Div A", "Div B", "Div C"],
@@ -31,6 +33,8 @@ export default function Page() {
     null
   );
   const [expandedResponses, setExpandedResponses] = useState<number[]>([]); // Added state for expanded rows
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // State for loading
   const [isLoading, setIsLoading] = useState(false);
@@ -364,9 +368,24 @@ export default function Page() {
                 </div>
                 <button
                   onClick={() => setSelectedFeedback(null)}
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
                 >
                   <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="w-full flex justify-between">
+                <button
+                  className="px-3 py-1 bg-green-400 hover:bg-green-500 rounded-lg transition-colors mb-2"
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="px-2 py-1 bg-red-400 hover:bg-red-500 rounded-lg transition-colors mb-2 text-white flex justify-center items-center"
+                >
+                  <Trash size={20} className="mr-1"/>
+                  Delete
                 </button>
               </div>
 
@@ -570,6 +589,13 @@ export default function Page() {
               </div>
             </div>
           </div>
+
+          {isDialogOpen && (
+            <UpdateFeedback
+              selectedFeedback={selectedFeedback}
+              onClose={() => setIsDialogOpen(false)}
+            />
+          )}
         </div>
       )}
     </div>

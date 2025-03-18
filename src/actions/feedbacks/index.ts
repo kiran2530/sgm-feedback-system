@@ -173,6 +173,49 @@ export const createFeedbackFormAction = async (
   }
 };
 
+export const updateFeedbackFormAction = async (
+  feedbackId: string,
+  updatedFeedback: Partial<
+    Pick<
+      Feedback,
+      | "academic_year"
+      | "department"
+      | "class"
+      | "semester"
+      | "term"
+      | "feedback_title"
+      | "faculty_with_subject"
+    >
+  >
+) => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("feedback")
+      .update(updatedFeedback)
+      .eq("id", feedbackId)
+      .select();
+
+    if (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Error in updateFeedbackFormAction: ${error}`,
+    };
+  }
+};
+
 export const getFeedbackByAcademicYearAction = async (academicYear: string) => {
   try {
     const supabase = await createClient();
