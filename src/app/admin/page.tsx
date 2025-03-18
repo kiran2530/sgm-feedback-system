@@ -26,6 +26,7 @@ const departments: Record<string, string[]> = {
   Electrical: ["Second Year", "Third Year", "Final Year"],
   Civil: ["Second Year", "Third Year", "Final Year"],
   Electronics: ["Second Year", "Third Year", "Final Year"],
+  MCA: ["First Year", "Second Year"],
 };
 
 export default function Page() {
@@ -381,10 +382,8 @@ export default function Page() {
                 >
                   Edit
                 </button>
-                <button
-                  className="px-2 py-1 bg-red-400 hover:bg-red-500 rounded-lg transition-colors mb-2 text-white flex justify-center items-center"
-                >
-                  <Trash size={20} className="mr-1"/>
+                <button className="px-2 py-1 bg-red-400 hover:bg-red-500 rounded-lg transition-colors mb-2 text-white flex justify-center items-center">
+                  <Trash size={20} className="mr-1" />
                   Delete
                 </button>
               </div>
