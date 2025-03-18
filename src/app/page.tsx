@@ -23,7 +23,7 @@ export default function Home() {
         {/* Hero Section */}
         <div className="text-center max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Welcome to SGM Feedback System
+            Welcome to SGMCOE Feedback System
           </h1>
           <p className="text-lg text-gray-700 mb-6">
             A seamless platform for students and faculty to provide and receive

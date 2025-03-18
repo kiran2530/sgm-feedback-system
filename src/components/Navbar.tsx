@@ -262,7 +262,6 @@ const Navbar = () => {
                         onClick={() => {
                           localStorage.removeItem("sgmAdminToken");
                           router.push("/");
-                          window.location.reload();
                         }}
                       >
                         <LogOut className="w-5 h-5 mr-1" />
@@ -385,6 +384,11 @@ const Navbar = () => {
                     </option>
                     {department == "First Year" ? (
                       <option value="First Year">First Year</option>
+                    ) : department == "MCA" ? (
+                      <>
+                        <option value="First Year">First Year</option>
+                        <option value="Second Year">Second Year</option>
+                      </>
                     ) : (
                       <>
                         <option value="Second Year">Second Year</option>
