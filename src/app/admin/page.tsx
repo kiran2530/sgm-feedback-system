@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation"; // ✅ Correct for App Router
 import UpdateFeedback from "@/components/UpdateFeedback";
 
 const departments: Record<string, string[]> = {
-  "First Year": ["Div A", "Div B", "Div C"],
+  "First Year": ["First Year", "Div A", "Div B", "Div C"],
   "Computer Science": ["Second Year", "Third Year", "Final Year"],
   Mechanical: ["Second Year", "Third Year", "Final Year"],
   Electrical: ["Second Year", "Third Year", "Final Year"],
