@@ -98,6 +98,7 @@ const Navbar = () => {
 
   const [academicYear, setAcademicYear] = useState("");
   const [feedbackName, setFeedbackName] = useState("");
+  const [totalToken, setTotalToken] = useState("");
   const [department, setDepartment] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [semester, setSemester] = useState("");
@@ -139,6 +140,19 @@ const Navbar = () => {
 
   // Handle Creating Feedback
   const createFeedback = async () => {
+    if (
+      !academicYear ||
+      !department ||
+      !classLevel ||
+      !semester ||
+      !term ||
+      !feedbackName ||
+      !faculties ||
+      !totalToken
+    ) {
+      alert("Please Fill all the information");
+      return;
+    }
     // Construct faculty_with_subject array
     const facultyWithSubjects = faculties.map((f) => `${f.name}:${f.subject}`);
 
@@ -167,7 +181,10 @@ const Navbar = () => {
       rating: rating,
     };
 
-    const data = await createFeedbackFormAction(newFeedback);
+    const data = await createFeedbackFormAction(
+      newFeedback,
+      parseInt(totalToken)
+    );
 
     console.log("Created Feedback Data:", data);
 
@@ -378,12 +395,18 @@ const Navbar = () => {
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
                     value={classLevel}
                     onChange={(e) => setClassLevel(e.target.value)}
+                    disabled={!department}
                   >
                     <option value="" disabled>
-                      Select
+                      {department ? "Select" : "First Select Department"}
                     </option>
                     {department == "First Year" ? (
-                      <option value="First Year">First Year</option>
+                      <>
+                        <option value="Div A">Div A</option>
+                        <option value="Div B">Div B</option>
+                        <option value="Div C">Div C</option>
+                        <option value="Div D">Div D</option>
+                      </>
                     ) : department == "MCA" ? (
                       <>
                         <option value="First Year">First Year</option>
@@ -400,45 +423,62 @@ const Navbar = () => {
                 </div>
               </div>
 
-              {/* Select semester */}
-              <div className="sm:w-[50%]">
-                <label className="block text-lg font-semibold mb-1">
-                  Select Semester
-                </label>
-                <select
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
-                  value={semester}
-                  onChange={(e) => setSemester(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  {["1", "2", "3", "4", "5", "6", "7", "8"].map(
-                    (year, index) => (
-                      <option key={index} className="">
-                        {year}
-                      </option>
-                    )
-                  )}
-                </select>
+              <div className="sm:flex gap-3">
+                {/* Select semester */}
+                <div className="sm:w-[50%]">
+                  <label className="block text-lg font-semibold mb-1">
+                    Select Semester
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                    value={semester}
+                    onChange={(e) => setSemester(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {["1", "2", "3", "4", "5", "6", "7", "8"].map(
+                      (year, index) => (
+                        <option key={index} className="">
+                          {year}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+
+                {/* Select Term */}
+                <div className="sm:w-[50%]">
+                  <label className="block text-lg font-semibold mb-1">
+                    Select Term
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                    value={term}
+                    onChange={(e) => setTerm(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    <option value="Mid Term">Mid Term</option>
+                    <option value="End Term">End Term</option>
+                  </select>
+                </div>
               </div>
 
-              {/* Select Term */}
+              {/* Total Number of tokens */}
               <div className="sm:w-[50%]">
                 <label className="block text-lg font-semibold mb-1">
-                  Select Term
+                  Total Numbers of Token
                 </label>
-                <select
+                <input
+                  type="text"
+                  placeholder="Enter Total Numbers of Token"
+                  required
                   className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
-                  value={term}
-                  onChange={(e) => setTerm(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  <option value="Mid Term">Mid Term</option>
-                  <option value="End Term">End Term</option>
-                </select>
+                  value={totalToken}
+                  onChange={(e) => setTotalToken(e.target.value)}
+                ></input>
               </div>
 
               {/* Faculty & Subject Section */}

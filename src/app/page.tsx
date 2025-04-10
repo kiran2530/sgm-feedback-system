@@ -4,6 +4,7 @@ import LoginModal from "@/components/LoginModal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+
 export default function Home() {
   const [isLogin, setIsLogin] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
