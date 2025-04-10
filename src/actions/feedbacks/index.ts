@@ -144,12 +144,13 @@ const createFeedbackCodes = (feedbackCount: number): string[] => {
 };
 
 export const createFeedbackFormAction = async (
-  feedbackForm: Omit<Feedback, "id">
+  feedbackForm: Omit<Feedback, "id">,
+  totalToken: number
 ) => {
   try {
     //facult
     const supabase = await createClient();
-    const feedbackCodes = createFeedbackCodes(20);
+    const feedbackCodes = createFeedbackCodes(totalToken);
     feedbackForm.unique_codes = feedbackCodes;
     const { data, error } = await supabase
       .from("feedback")

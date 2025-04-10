@@ -18,9 +18,10 @@ import { getFeedbackByAcademicYearAction } from "@/actions/feedbacks";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
 import { useRouter } from "next/navigation"; // ✅ Correct for App Router
 import UpdateFeedback from "@/components/UpdateFeedback";
+import { generateAnalysis } from "@/utils/generateAnalysis";
 
 const departments: Record<string, string[]> = {
-  "First Year": ["First Year", "Div A", "Div B", "Div C"],
+  "First Year": ["Div A", "Div B", "Div C", "Div D"],
   "Computer Science": ["Second Year", "Third Year", "Final Year"],
   Mechanical: ["Second Year", "Third Year", "Final Year"],
   Electrical: ["Second Year", "Third Year", "Final Year"],
@@ -551,7 +552,7 @@ export default function Page() {
                   );
                 })}
               </div>
-              <div className="flex justify-end mt-14">
+              <div className="flex justify-between mt-14">
                 {/* <PDFDownloadLink
                 document={<FeedbackPDF selectedFeedback={selectedFeedback} />}
                 fileName={`${
@@ -584,6 +585,19 @@ export default function Page() {
                   className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-2"
                 >
                   Generate Excel
+                </button>
+
+                <button
+                  onClick={() =>
+                    generateAnalysis(
+                      selectedFeedback,
+                      averageWeights,
+                      averageRatings
+                    )
+                  }
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-green-600 mb-2"
+                >
+                  Download Analysis
                 </button>
               </div>
             </div>
