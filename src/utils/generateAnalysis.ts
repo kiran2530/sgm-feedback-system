@@ -71,8 +71,6 @@ export const generateAnalysis = (
       const questionText =
         feedbackQuestions[index]?.question || `Q${index + 1}`;
       const ratingValue = ratings[index];
-      const weightVal = typeof weight === "number" ? weight : "NA";
-      const ratingVal = typeof ratingValue === "number" ? ratingValue : "NA";
 
       if (typeof weight === "number" && typeof ratingValue === "number") {
         totalWeight += weight;
