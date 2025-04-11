@@ -186,12 +186,16 @@ export const updateFeedbackFormAction = async (
       | "term"
       | "feedback_title"
       | "faculty_with_subject"
+      | "unique_codes"
     >
-  >
+  >,
+  totalToken: number
 ) => {
   try {
     const supabase = await createClient();
 
+    const feedbackCodes = createFeedbackCodes(totalToken);
+    updatedFeedback.unique_codes = feedbackCodes;
     const { data, error } = await supabase
       .from("feedback")
       .update(updatedFeedback)
@@ -445,6 +449,34 @@ export const updateFeedbackWeightsAndRatings = async (
     return {
       success: false,
       message: `Unexpected error: ${error}`,
+    };
+  }
+};
+
+// delete feedback form
+export const deleteFeedbackByIdAction = async (feedbackId: string) => {
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("feedback")
+      .delete()
+      .eq("id", feedbackId);
+
+    if (error) {
+      return {
+        success: false,
+        message: `error in deleteFeedbackByIdAction : ${error.message}`,
+      };
+    }
+
+    return {
+      success: true,
+      message: "Feedback deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `error in deleteFeedbackByIdAction : ${error}`,
     };
   }
 };

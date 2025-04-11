@@ -99,6 +99,7 @@ const Navbar = () => {
   const [academicYear, setAcademicYear] = useState("");
   const [feedbackName, setFeedbackName] = useState("");
   const [totalToken, setTotalToken] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [department, setDepartment] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [semester, setSemester] = useState("");
@@ -148,7 +149,8 @@ const Navbar = () => {
       !term ||
       !feedbackName ||
       !faculties ||
-      !totalToken
+      !totalToken ||
+      !dueDate
     ) {
       alert("Please Fill all the information");
       return;
@@ -175,7 +177,7 @@ const Navbar = () => {
       feedback_title: feedbackName,
       faculty_with_subject: facultyWithSubjects,
       created_at: new Date().toISOString(),
-      date: new Date(),
+      date: new Date(dueDate),
       unique_codes: [],
       weights: weights,
       rating: rating,
@@ -466,19 +468,36 @@ const Navbar = () => {
                 </div>
               </div>
 
-              {/* Total Number of tokens */}
-              <div className="sm:w-[50%]">
-                <label className="block text-lg font-semibold mb-1">
-                  Total Numbers of Token
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter Total Numbers of Token"
-                  required
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
-                  value={totalToken}
-                  onChange={(e) => setTotalToken(e.target.value)}
-                ></input>
+              <div className="sm:flex gap-3">
+                {/* Total Number of tokens */}
+                <div className="sm:w-[50%]">
+                  <label className="block text-lg font-semibold mb-1">
+                    Total Numbers of Token
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter Total Numbers of Token"
+                    required
+                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                    value={totalToken}
+                    onChange={(e) => setTotalToken(e.target.value)}
+                  ></input>
+                </div>
+
+                {/* select due/exprire date */}
+                <div className="sm:w-[50%]">
+                  <label className="block text-lg font-semibold mb-1">
+                    Due date
+                  </label>
+                  <input
+                    type="date"
+                    placeholder="Enter Total Numbers of Token"
+                    required
+                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                  ></input>
+                </div>
               </div>
 
               {/* Faculty & Subject Section */}

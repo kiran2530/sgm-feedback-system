@@ -14,7 +14,10 @@ import {
 // import FeedbackPDF from "../../components/FeedbackPDF";
 import { generateCodeExcel, generateExcel } from "../../utils/generateExcel";
 import { Feedback } from "@/types";
-import { getFeedbackByAcademicYearAction } from "@/actions/feedbacks";
+import {
+  deleteFeedbackByIdAction,
+  getFeedbackByAcademicYearAction,
+} from "@/actions/feedbacks";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
 import { useRouter } from "next/navigation"; // ✅ Correct for App Router
 import UpdateFeedback from "@/components/UpdateFeedback";
@@ -62,6 +65,9 @@ export default function Page() {
   const [averageRatings, setAverageRatings] = useState<FacultyWeightsRating>(
     {}
   );
+
+  // loading state for deleting feedback
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // checking login or not
   const router = useRouter();
@@ -185,6 +191,7 @@ export default function Page() {
     return facultyAverages;
   };
 
+  // funtion for filter data
   const filteredData = feedbackData.filter(
     (item) =>
       (!academicYear ||
@@ -195,12 +202,14 @@ export default function Page() {
         item.class.toLowerCase() === selectedClass.toLowerCase())
   );
 
+  // funtion for toggle response
   const toggleResponse = (id: number) => {
     setExpandedResponses((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
+  // function for calculate avarage
   const calculateAverages = (obj: {
     [key: string]: number[];
   }): { [key: string]: number } => {
@@ -216,6 +225,26 @@ export default function Page() {
     });
 
     return averages;
+  };
+
+  // function for handling delete feedback
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this feedback?"
+    );
+    if (!confirmDelete) return;
+
+    setIsDeleting(true);
+    const res = await deleteFeedbackByIdAction(id);
+    setIsDeleting(false);
+
+    if (res.success) {
+      alert("Feedback deleted successfully");
+      // Optionally, you can refresh the page or remove the item from state
+      window.location.reload();
+    } else {
+      alert(res.message);
+    }
   };
 
   return (
@@ -383,9 +412,15 @@ export default function Page() {
                 >
                   Edit
                 </button>
-                <button className="px-2 py-1 bg-red-400 hover:bg-red-500 rounded-lg transition-colors mb-2 text-white flex justify-center items-center">
+                <button
+                  className="px-2 py-1 bg-red-400 hover:bg-red-500 rounded-lg transition-colors mb-2 text-white flex justify-center items-center"
+                  onClick={() => {
+                    handleDelete(selectedFeedback.id);
+                  }}
+                  disabled={isDeleting}
+                >
                   <Trash size={20} className="mr-1" />
-                  Delete
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </button>
               </div>
 

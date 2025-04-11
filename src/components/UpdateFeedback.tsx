@@ -32,6 +32,10 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
   const [term, setTerm] = useState(selectedFeedback.term);
 
   const [isUpdating, setIsUpdating] = useState(false);
+  const [totalToken, setTotalToken] = useState(
+    selectedFeedback.unique_codes.length + ""
+  );
+  const [dueDate, setDueDate] = useState(selectedFeedback.date);
 
   useEffect(() => {
     const currentYear = new Date().getFullYear();
@@ -68,17 +72,24 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
       term,
       feedback_title: feedbackName,
       faculty_with_subject: facultyWithSubjects,
+      date: dueDate,
     };
 
     try {
-      const data = await updateFeedbackFormAction(feedbackId, updatedFeedback);
+      const data = await updateFeedbackFormAction(
+        feedbackId,
+        updatedFeedback,
+        parseInt(totalToken)
+      );
+      console.log("successfull");
+
       if (data.success) {
         onClose();
         window.location.reload();
         alert("Updated Feedback");
       }
     } catch (error) {
-      console.error("Error updating feedback:", error);
+      console.log("Error updating feedback:", error);
     } finally {
       setIsUpdating(false);
     }
@@ -174,7 +185,17 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
                   Select
                 </option>
                 {department == "First Year" ? (
-                  <option value="First Year">First Year</option>
+                  <>
+                    <option value="Div A">Div A</option>
+                    <option value="Div B">Div B</option>
+                    <option value="Div C">Div C</option>
+                    <option value="Div D">Div D</option>
+                  </>
+                ) : department == "MCA" ? (
+                  <>
+                    <option value="First Year">First Year</option>
+                    <option value="Second Year">Second Year</option>
+                  </>
                 ) : (
                   <>
                     <option value="Second Year">Second Year</option>
@@ -186,43 +207,79 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
             </div>
           </div>
 
-          {/* Select semester */}
-          <div className="sm:w-[50%]">
-            <label className="block text-lg font-semibold mb-1">
-              Select Semester
-            </label>
-            <select
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
-              value={semester}
-              onChange={(e) => setSemester(e.target.value)}
-            >
-              <option value="" disabled>
-                Select
-              </option>
-              {["1", "2", "3", "4", "5", "6", "7", "8"].map((year, index) => (
-                <option key={index} className="">
-                  {year}
+          <div className="sm:flex">
+            {/* Select semester */}
+            <div className="sm:w-[50%]">
+              <label className="block text-lg font-semibold mb-1">
+                Select Semester
+              </label>
+              <select
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                value={semester}
+                onChange={(e) => setSemester(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select
                 </option>
-              ))}
-            </select>
+                {["1", "2", "3", "4", "5", "6", "7", "8"].map((year, index) => (
+                  <option key={index} className="">
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Select Term */}
+            <div className="sm:w-[50%]">
+              <label className="block text-lg font-semibold mb-1">
+                Select Term
+              </label>
+              <select
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                <option value="Mid Term">Mid Term</option>
+                <option value="End Term">End Term</option>
+              </select>
+            </div>
           </div>
 
-          {/* Select Term */}
-          <div className="sm:w-[50%]">
-            <label className="block text-lg font-semibold mb-1">
-              Select Term
-            </label>
-            <select
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
-              value={term}
-              onChange={(e) => setTerm(e.target.value)}
-            >
-              <option value="" disabled>
-                Select
-              </option>
-              <option value="Mid Term">Mid Term</option>
-              <option value="End Term">End Term</option>
-            </select>
+          <div className="sm:flex gap-3">
+            {/* Total Number of tokens */}
+            <div className="sm:w-[50%]">
+              <label className="block text-lg font-semibold mb-1">
+                Total Numbers of Token
+              </label>
+              <input
+                type="text"
+                placeholder="Enter Total Numbers of Token"
+                required
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                value={totalToken}
+                onChange={(e) => setTotalToken(e.target.value)}
+              ></input>
+            </div>
+
+            {/* select due/exprire date */}
+            <div className="sm:w-[50%]">
+              <label className="block text-lg font-semibold mb-1">
+                Due date
+              </label>
+              <input
+                type="date"
+                placeholder="Enter Total Numbers of Token"
+                required
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 border-gray-300"
+                value={
+                  dueDate ? new Date(dueDate).toISOString().split("T")[0] : ""
+                } // Convert Date -> "YYYY-MM-DD"
+                onChange={(e) => setDueDate(new Date(e.target.value))}
+              ></input>
+            </div>
           </div>
 
           {/* Faculty & Subject Section */}
