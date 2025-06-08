@@ -1,69 +1,78 @@
 export const feedbackQuestions = [
   {
     id: 1,
-    question:
-      "How would you rate the overall teaching effectiveness of the faculty?",
+    question: "Possesses deep knowledge of the subject taught?",
   },
-  { id: 2, question: "How well does the faculty explain complex topics?" },
-  { id: 3, question: "Does the faculty encourage student participation?" },
+  { id: 2, question: "Communication skill?" },
+  { id: 3, question: "Focus on Syllabi and curricula?" },
   {
     id: 4,
-    question: "How clear are the faculty’s explanations during lectures?",
+    question: "Regularity & Punctuality in taking Classes?",
   },
-  { id: 5, question: "How responsive is the faculty to students' queries?" },
-  { id: 6, question: "How well does the faculty manage class time?" },
+  { id: 5, question: "Adopt Learner (Student) Centric Approch?" },
+  { id: 6, question: "Possesses self-confidence?" },
   {
     id: 7,
-    question: "Does the faculty provide relevant examples while teaching?",
+    question:
+      "Availability in the Laboratory / Tutorial Room for whole duration of laboratory / tutorial  hours?",
   },
   {
     id: 8,
-    question: "How effective are the faculty's assessment and grading methods?",
+    question:
+      "Conduction of  Periodical Assessments / Contineous Internal Evaluation?",
   },
   {
     id: 9,
     question:
-      "Does the faculty provide sufficient study materials and references?",
+      "Skill about linking subject to life experience & creating interest in the subject?",
   },
   {
     id: 10,
-    question: "How well does the faculty encourage critical thinking?",
+    question:
+      "Inform about outcome based education for  Program Outcomes, Course Outcomes?",
   },
   {
     id: 11,
-    question: "How approachable is the faculty outside of class hours?",
+    question: "HControl mechanism in effective conduction of class?",
   },
   {
     id: 12,
-    question: "Does the faculty use modern teaching methods effectively?",
+    question: "Space for student involvement / participation?",
   },
   {
     id: 13,
-    question: "How satisfied are you with the faculty's subject knowledge?",
+    question: "Helping approach towards varied academic interests of students?",
   },
   {
     id: 14,
-    question: "Does the faculty provide constructive feedback on assignments?",
+    question: "Coverage of relevant topics beyond curriculam?",
   },
   {
     id: 15,
     question:
-      "How well does the faculty connect theoretical concepts to practical applications?",
+      "Helps in conducting experiments through set of instructions or demonstrations?",
   },
   {
     id: 16,
-    question: "Does the faculty create an engaging learning environment?",
+    question: "Refers latest developments in the field?",
   },
-  { id: 17, question: "How effective are the faculty’s communication skills?" },
+  {
+    id: 17,
+    question: "Usage of teaching aids (OHP/Smart Classroom /PPT's etc.)?",
+  },
   {
     id: 18,
-    question: "How satisfied are you with the faculty's classroom management?",
+    question:
+      "Built approach towards developing professional skills among students?",
   },
   {
     id: 19,
-    question: "Does the faculty encourage teamwork and collaboration?",
+    question: "Usage of innovative teaching methods?",
   },
-  { id: 20, question: "Would you recommend this faculty to other students?" },
+  {
+    id: 20,
+    question: "Helps in realizing strengths and developmental needs?",
+  },
 ];
 
 export const weightsOptions: number[] = [
