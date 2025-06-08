@@ -181,7 +181,7 @@ export default function Page() {
       const numEntries = values.length;
       const sumArray = values.reduce((acc, curr) => {
         return acc.map((sum, index) => sum + curr[index]);
-      }, new Array(values[0].length).fill(0));
+      }, new Array(values[0]?.length).fill(0));
 
       facultyAverages[faculty] = sumArray.map((sum: number) =>
         parseFloat((sum / numEntries).toFixed(2))
