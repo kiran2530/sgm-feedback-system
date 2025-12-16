@@ -138,6 +138,8 @@ export default function Page() {
                       <option value="Div B">Div B</option>
                       <option value="Div C">Div C</option>
                       <option value="Div D">Div D</option>
+                      <option value="Div E">Div E</option>
+                      <option value="Div F">Div F</option>
                     </>
                   ) : department == "MCA" ? (
                     <>
