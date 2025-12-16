@@ -157,7 +157,6 @@ export const createFeedbackFormAction = async (
       .insert([feedbackForm])
       .select();
     if (error) {
-      console.log(error);
       return {
         success: false,
         message: error.message,
