@@ -213,7 +213,7 @@ const Navbar = () => {
                         className="mt-2 px-4 text-sm flex justify-center items-center text-red-600 hover:text-gray-400 font-semibold"
                         onClick={() => {
                           localStorage.removeItem("sgmAdminToken");
-                          router.push("/");
+                          window.location.href = "/";
                         }}
                       >
                         <LogOut className="w-5 h-5 mr-1" />
@@ -341,6 +341,8 @@ const Navbar = () => {
                         <option value="Div B">Div B</option>
                         <option value="Div C">Div C</option>
                         <option value="Div D">Div D</option>
+                        <option value="Div E">Div E</option>
+                        <option value="Div F">Div F</option>
                       </>
                     ) : department == "MCA" ? (
                       <>
