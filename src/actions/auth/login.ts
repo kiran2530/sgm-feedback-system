@@ -2,35 +2,26 @@
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { createClient } from "@/utils/supabase/server";
+import { connectDB } from "@/utils/db";
+import Admin from "@/models/Admin";
 
 export const loginAdmin = async (email: string, password: string) => {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("admin")
-      .select("*")
-      .eq("email", email)
-      .single();
+    await connectDB();
 
-    if (error || !data)
-      return { success: false, message: "Invalid credentials" };
+    const admin = await Admin.findOne({ email });
+    if (!admin) return { success: false, message: "Invalid credentials" };
 
-    const isValidPassword = await bcrypt.compare(password, data.password);
+    const isValidPassword = await bcrypt.compare(password, admin.password);
     if (!isValidPassword)
       return { success: false, message: "Invalid credentials" };
 
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("JWT_SECRET is missing in environment variables");
-    } else {
-      console.log(process.env.JWT_SECRET);
     }
 
-    const token = jwt.sign(
-      { adminId: data.id },
-      process.env.JWT_SECRET as string
-    );
+    const token = jwt.sign({ adminId: admin._id.toString() }, jwtSecret);
 
     return { success: true, token, message: "Login Successfully" };
   } catch (error) {

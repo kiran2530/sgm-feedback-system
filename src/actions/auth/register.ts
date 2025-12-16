@@ -1,7 +1,8 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { createClient } from "@/utils/supabase/server";
+import { connectDB } from "@/utils/db";
+import Admin from "@/models/Admin";
 
 export const registerAdmin = async (
   name: string,
@@ -10,21 +11,27 @@ export const registerAdmin = async (
   password: string
 ) => {
   try {
-    const supabase = await createClient();
+    await connectDB();
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const { data, error } = await supabase
-      .from("admin")
-      .insert([{ name, email, phone, password: hashedPassword }]);
+    const admin = await Admin.create({
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+    });
 
-    if (error) throw new Error(error.message);
-
-    return { success: true, message: "Admin registered successfully", data };
-  } catch (error) {
+    return {
+      success: true,
+      message: "Admin registered successfully",
+      data: JSON.parse(JSON.stringify(admin)),
+    };
+  } catch (error: any) {
     console.log("Error in registerAdmin:", error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : "Unknown error",
+      message: error.message || "Unknown error",
     };
   }
 };

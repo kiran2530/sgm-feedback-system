@@ -1,32 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
-import { createClient } from "@/utils/supabase/server";
-import { supabase } from "../../utils/supabase/client";
+
+import { connectDB } from "@/utils/db";
+import Feedback from "@/models/Feedback";
+import Response from "@/models/Response";
 
 export const getAllResponsesByFeedbackAction = async (feedbackId: string) => {
   try {
-    const supabse = await createClient();
-    const { data, error } = await supabse
-      .from("feedbacks")
-      .select("*")
-      .eq("feedback_id", feedbackId);
-    if (error) {
-      console.log("error in getAllResponsesByFeedbackAction : ", error);
-      return {
-        success: false,
-        message: `error in getAllResponsesByFeedbackAction : ${error}`,
-      };
-    }
+    await connectDB();
+
+    const data = await Response.find({ feedback_id: feedbackId });
+
     return {
       success: true,
-      data: data,
+      data, // Returns array of responses
     };
-  } catch (error) {
+  } catch (error: any) {
     console.log("error in getAllResponsesByFeedbackAction : ", error);
     return {
       success: false,
-      message: `error in getAllResponsesByFeedbackAction : ${error}`,
+      message: `error in getAllResponsesByFeedbackAction : ${error.message}`,
     };
   }
 };
@@ -37,32 +31,36 @@ export const createNewResponseAction = async (
   feedbackId: string
 ) => {
   try {
-    const supabase = await createClient();
-    const res = await supabase
-      .from("feedback")
-      .select("unique_codes")
-      .eq("id", feedbackId);
-    console.log({ res });
-    //const ids = res[0].unique_codes;
+    await connectDB();
 
-    const { data, error } = await supabase
-      .from("responses")
-      .insert([response])
-      .select();
-    if (error) {
+    // Fetch feedback & unique codes
+    const feedback = await Feedback.findById(feedbackId);
+    if (!feedback) {
       return {
         success: false,
-        message: `error in createNewResponseAction : ${error}`,
+        message: "Feedback not found",
       };
     }
+
+    // Validate unique code
+    if (!feedback.unique_codes.includes(uniqueCode)) {
+      return {
+        success: false,
+        message: "Invalid unique code",
+      };
+    }
+
+    // Save response document
+    const newResponse = await Response.create(response);
+
     return {
       success: true,
-      data,
+      data: newResponse,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       success: false,
-      message: `error in createNewResponseAction : ${error}`,
+      message: `error in createNewResponseAction : ${error.message}`,
     };
   }
 };

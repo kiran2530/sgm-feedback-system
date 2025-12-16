@@ -19,7 +19,7 @@
 // }
 
 export interface Feedback {
-  id: string;
+  _id: string;
   academic_year: string;
   department: string;
   class: string;

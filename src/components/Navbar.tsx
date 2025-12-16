@@ -11,12 +11,6 @@ import { createFeedbackFormAction } from "@/actions/feedbacks";
 import LoginModal from "./LoginModal";
 import AdminRegistrationModal from "./AdminRegistrationModal";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
-// import { checkLogin } from "@/utils/checkLogin";
-
-// const ratingOptions: number[] = [
-//   0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5,
-//   14.5, 15.5, 16.5, 17.5, 18.5, 19.5,
-// ];
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -101,7 +95,7 @@ const Navbar = () => {
     });
 
     // Create feedback data
-    const newFeedback: Omit<Feedback, "id"> = {
+    const newFeedback: Omit<Feedback, "_id"> = {
       academic_year: academicYear,
       department,
       class: classLevel,
@@ -172,7 +166,7 @@ const Navbar = () => {
                 Student
               </Link>
             </div>
-          ) : pathname == "/admin" ? (
+          ) : pathname.startsWith("/admin") ? (
             <div className="flex gap-2">
               <button
                 onClick={() => setIsDialogOpen(true)}
@@ -307,8 +301,8 @@ const Navbar = () => {
                     <option value="" disabled>
                       Select
                     </option>
-                    <option value="First Year">First Year</option>
-                    <option value="Computer Science">
+                    <option value="First-Year">First Year</option>
+                    <option value="Computer-Science">
                       Computer Science & Engineering
                     </option>
                     <option value="Electronics">
@@ -335,23 +329,23 @@ const Navbar = () => {
                     <option value="" disabled>
                       {department ? "Select" : "First Select Department"}
                     </option>
-                    {department == "First Year" ? (
+                    {department == "First-Year" ? (
                       <>
-                        <option value="Div A">Div A</option>
-                        <option value="Div B">Div B</option>
-                        <option value="Div C">Div C</option>
-                        <option value="Div D">Div D</option>
+                        <option value="Div-A">Div A</option>
+                        <option value="Div-B">Div B</option>
+                        <option value="Div-C">Div C</option>
+                        <option value="Div-D">Div D</option>
                       </>
                     ) : department == "MCA" ? (
                       <>
-                        <option value="First Year">First Year</option>
-                        <option value="Second Year">Second Year</option>
+                        <option value="First-Year">First Year</option>
+                        <option value="Second-Year">Second Year</option>
                       </>
                     ) : (
                       <>
-                        <option value="Second Year">Second Year</option>
-                        <option value="Third Year">Third Year</option>
-                        <option value="Final Year">Final Year</option>
+                        <option value="Second-Year">Second Year</option>
+                        <option value="Third-Year">Third Year</option>
+                        <option value="Final-Year">Final Year</option>
                       </>
                     )}
                   </select>
