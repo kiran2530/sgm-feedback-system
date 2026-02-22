@@ -3,20 +3,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import {
-  Trash,
-  X,
-  StepBack,
-  ChevronDown,
-  ChevronUp,
-  Check,
-} from "lucide-react";
+import { Trash, X, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { Feedback } from "@/types";
 import {
   deleteFeedbackByIdAction,
   getFeedbackByAcademicYearAction,
 } from "@/actions/feedbacks";
 import { generateCodeExcel, generateExcel } from "@/utils/generateExcel";
+import { generateAnalysis } from "@/utils/generateAnalysis";
 import UpdateFeedback from "@/components/UpdateFeedback";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
 
@@ -25,7 +19,7 @@ export default function Page() {
   const params = useParams();
 
   const norm = (v: string | string[] | undefined) =>
-    Array.isArray(v) ? v[0] : v ?? "";
+    Array.isArray(v) ? v[0] : (v ?? "");
 
   const year = norm(params?.year);
   const department = norm(params?.department);
@@ -34,7 +28,7 @@ export default function Page() {
   const [feedbackData, setFeedbackData] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(
-    null
+    null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [expandedResponses, setExpandedResponses] = useState<number[]>([]);
@@ -45,7 +39,7 @@ export default function Page() {
     if (!department) router.push(`/admin/${encodeURIComponent(year)}`);
     if (!classParam)
       router.push(
-        `/admin/${encodeURIComponent(year)}/${encodeURIComponent(department)}`
+        `/admin/${encodeURIComponent(year)}/${encodeURIComponent(department)}`,
       );
   }, [year, department, classParam, router]);
 
@@ -108,7 +102,7 @@ export default function Page() {
 
   const toggleResponse = (i: number) => {
     setExpandedResponses((prev) =>
-      prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]
+      prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i],
     );
   };
 
@@ -124,7 +118,7 @@ export default function Page() {
       } else {
         alert(res.message || "Failed to delete");
       }
-    } catch (err) {
+    } catch {
       alert("Delete failed");
     } finally {
       setIsDeleting(false);
@@ -269,10 +263,10 @@ export default function Page() {
                 const [facultyName, facultySubject] = faculty.split(":");
                 // compute averages from selectedFeedback.weights and rating (your logic)
                 const totalAverageWeight = calculateAverages(
-                  (selectedFeedback.weights as any) ?? {}
+                  (selectedFeedback.weights as any) ?? {},
                 );
                 const totalAverageRating = calculateAverages(
-                  (selectedFeedback.rating as any) ?? {}
+                  (selectedFeedback.rating as any) ?? {},
                 );
 
                 return (
@@ -391,9 +385,7 @@ export default function Page() {
                 Generate Excel
               </button>
               <button
-                onClick={() => {
-                  /* you had generateAnalysis previously */
-                }}
+                onClick={() => generateAnalysis(selectedFeedback, {}, {})}
                 className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-green-600"
               >
                 Download Analysis

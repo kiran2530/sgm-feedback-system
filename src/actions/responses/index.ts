@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { connectDB } from "@/utils/db";
@@ -28,7 +26,7 @@ export const getAllResponsesByFeedbackAction = async (feedbackId: string) => {
 export const createNewResponseAction = async (
   response: any,
   uniqueCode: string,
-  feedbackId: string
+  feedbackId: string,
 ) => {
   try {
     await connectDB();

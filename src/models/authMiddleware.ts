@@ -15,7 +15,7 @@ export const extractAdminId = (req: Request | NextRequest) => {
 
     const payload = jwt.verify(token, process.env.JWT_SECRET as string) as any;
     return payload?.adminId || null;
-  } catch (err) {
+  } catch {
     return null;
   }
 };

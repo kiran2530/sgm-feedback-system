@@ -8,7 +8,7 @@ export const registerAdmin = async (
   name: string,
   email: string,
   phone: string,
-  password: string
+  password: string,
 ) => {
   try {
     await connectDB();
@@ -27,11 +27,16 @@ export const registerAdmin = async (
       message: "Admin registered successfully",
       data: JSON.parse(JSON.stringify(admin)),
     };
-  } catch (error: any) {
-    console.log("Error in registerAdmin:", error);
+  } catch (error: unknown) {
+    let message = "Unknown error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
     return {
       success: false,
-      message: error.message || "Unknown error",
+      message,
     };
   }
 };

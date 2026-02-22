@@ -6,6 +6,13 @@ import Admin from "@/models/Admin";
 import { extractAdminId } from "@/utils/authMiddleware";
 import { NextRequest } from "next/server";
 
+type AdminUpdate = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+};
+
 export const updateAdminCredentials = async (req: NextRequest) => {
   try {
     await connectDB();
@@ -17,7 +24,7 @@ export const updateAdminCredentials = async (req: NextRequest) => {
     if (!name && !email && !phone && !password)
       return { success: false, message: "Nothing to update" };
 
-    const updates: any = {};
+    const updates: Partial<AdminUpdate> = {};
     if (name) updates.name = name;
     if (email) updates.email = email;
     if (phone) updates.phone = phone;

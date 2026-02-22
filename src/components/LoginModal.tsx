@@ -1,7 +1,6 @@
 "use client";
-
 import type React from "react";
-
+import { motion } from "framer-motion";
 import { useState, useRef } from "react";
 import { X } from "lucide-react";
 import ForgotPasswordModal from "./ForgotPasswordModal";
@@ -24,11 +23,12 @@ export default function LoginModal({
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const modalRef = useRef<HTMLDivElement>(null);
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsLoading(true);
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const validEmail = emailRegex.test(email);
@@ -42,7 +42,6 @@ export default function LoginModal({
       // Handle login logic here
       const data = await loginAdmin(email, password);
 
-      console.log("Login with:", data);
       if (data.success) {
         localStorage.setItem("sgmAdminToken", data.token ?? "");
         // Reset form
@@ -50,10 +49,11 @@ export default function LoginModal({
         setPassword("");
         // Close modal
         onClose();
-        console.log("Token : ", localStorage.getItem("sgmAdminToken"));
+        setIsLoading(false);
         window.location.reload();
       }
       alert(data.message);
+      setIsLoading(false);
     }
   };
 
@@ -159,9 +159,21 @@ export default function LoginModal({
             {/* Submit button */}
             <button
               type="submit"
-              className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary flex items-center justify-center"
             >
-              Login
+              {isLoading ? (
+                <motion.div
+                  className="w-6 h-6 border-t-2 border-white rounded-full animate-spin"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>

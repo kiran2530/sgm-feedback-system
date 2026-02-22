@@ -13,16 +13,16 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
     (faculty) => {
       const [name, subject] = faculty.split(":");
       return { name, subject };
-    }
+    },
   );
 
   const initialYears: string[] = [];
   const [years, setYears] = useState(initialYears);
   const [academicYear, setAcademicYear] = useState(
-    selectedFeedback.academic_year
+    selectedFeedback.academic_year,
   );
   const [feedbackName, setFeedbackName] = useState(
-    selectedFeedback.feedback_title
+    selectedFeedback.feedback_title,
   );
   const [department, setDepartment] = useState(selectedFeedback.department);
   const [classLevel, setClassLevel] = useState(selectedFeedback.class);
@@ -33,7 +33,7 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [totalToken, setTotalToken] = useState(
-    selectedFeedback.unique_codes.length + ""
+    selectedFeedback.unique_codes.length + "",
   );
   const [dueDate, setDueDate] = useState(selectedFeedback.date);
 
@@ -79,7 +79,7 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
       const data = await updateFeedbackFormAction(
         feedbackId,
         updatedFeedback,
-        parseInt(totalToken)
+        parseInt(totalToken),
       );
       console.log("successfull");
 
@@ -335,7 +335,7 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
           </button>
           <button
             onClick={() => {
-              updateFeedback(selectedFeedback.id);
+              updateFeedback(selectedFeedback._id);
             }}
             className={`px-4 py-2 text-white rounded-md ${
               isUpdating

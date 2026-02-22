@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
+import { APP_METADATA } from "@/data/metadata";
 import { Plus, X, User, LogOut, Settings } from "lucide-react";
 import collegeLogo from "../../public/collegeImage.png";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { createFeedbackFormAction } from "@/actions/feedbacks";
 import LoginModal from "./LoginModal";
 import AdminRegistrationModal from "./AdminRegistrationModal";
 import { feedbackQuestions } from "@/data/feedbackQuestionsOption";
+import { getAdminInfo } from "@/actions/auth/login";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -22,7 +23,11 @@ const Navbar = () => {
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-
+  const [adminProfileInfo, setAdminProfileInfo] = useState({
+    name: "Admin",
+    email: "admin@gmail.com",
+    phone: "0000000000",
+  });
   const [academicYear, setAcademicYear] = useState("");
   const [feedbackName, setFeedbackName] = useState("");
   const [totalToken, setTotalToken] = useState("");
@@ -41,12 +46,28 @@ const Navbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("sgmAdminToken");
-    if (token) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
+    const fetchAdmin = async () => {
+      const token = localStorage.getItem("sgmAdminToken");
+
+      if (!token) {
+        setIsLogin(false);
+        return;
+      }
+
+      try {
+        const data = await getAdminInfo(token);
+        if (data?.success) {
+          setAdminProfileInfo(data.adminProfileInfo);
+          setIsLogin(true);
+        } else {
+          setIsLogin(false);
+        }
+      } catch {
+        setIsLogin(false);
+      }
+    };
+
+    fetchAdmin();
   }, [router]);
 
   useEffect(() => {
@@ -112,7 +133,7 @@ const Navbar = () => {
 
     const data = await createFeedbackFormAction(
       newFeedback,
-      parseInt(totalToken)
+      parseInt(totalToken),
     );
 
     console.log("Created Feedback Data:", data);
@@ -135,9 +156,10 @@ const Navbar = () => {
         <div className="container mx-auto flex justify-between items-center">
           {/* Left Side: Name */}
           {/* <h1 className="text-2xl font-bold">SGM</h1> */}
-
-          <Image src={collegeLogo} alt="SGM" height={60} width={60}></Image>
-
+          <div>
+            <Image src={collegeLogo} alt="SGM" height={60} width={60}></Image>
+            <span>{APP_METADATA.logoName}</span>
+          </div>
           {/* Right Side: Buttons */}
           {pathname == "/" ? (
             <div className="space-x-4 flex">
@@ -189,8 +211,10 @@ const Navbar = () => {
                 {isProfileOpen && (
                   <div>
                     <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-md rounded-md py-2">
-                      <p className="font-bold px-4">Prof. S. S. Gurav</p>
-                      <p className="text-sm px-4">+91 9209623553</p>
+                      <p className="font-bold px-4">{adminProfileInfo.name}</p>
+                      <p className="text-sm px-4">
+                        +91 {adminProfileInfo.phone}
+                      </p>
 
                       <hr className="border-gray-500 mt-1" />
                       <button
@@ -207,6 +231,7 @@ const Navbar = () => {
                         className="mt-2 px-4 text-sm flex justify-center items-center text-red-600 hover:text-gray-400 font-semibold"
                         onClick={() => {
                           localStorage.removeItem("sgmAdminToken");
+                          setIsLogin(false);
                           router.push("/");
                         }}
                       >
@@ -371,7 +396,7 @@ const Navbar = () => {
                         <option key={index} className="">
                           {year}
                         </option>
-                      )
+                      ),
                     )}
                   </select>
                 </div>

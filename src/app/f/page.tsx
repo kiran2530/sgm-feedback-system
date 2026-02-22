@@ -39,7 +39,7 @@ export default function Page() {
         await getFeedbackFormsWithAcademicYearDepartmentClassWiseAction(
           academicYear,
           department,
-          classLevel
+          classLevel,
         );
       if (response.success) {
         setFeedbackData(response.data ?? []);
@@ -107,8 +107,8 @@ export default function Page() {
                   onChange={(e) => setDepartment(e.target.value)}
                 >
                   <option value="">Select</option>
-                  <option value="First Year">First Year</option>
-                  <option value="Computer Science">
+                  <option value="First-Year">First Year</option>
+                  <option value="Computer-Science">
                     Computer Science & Engineering
                   </option>
                   <option value="Electronics">
@@ -132,23 +132,23 @@ export default function Page() {
                   onChange={(e) => setClassLevel(e.target.value)}
                 >
                   <option value="">Select</option>
-                  {department == "First Year" ? (
+                  {department == "First-Year" ? (
                     <>
-                      <option value="Div A">Div A</option>
-                      <option value="Div B">Div B</option>
-                      <option value="Div C">Div C</option>
-                      <option value="Div D">Div D</option>
+                      <option value="Div-A">Div A</option>
+                      <option value="Div-B">Div B</option>
+                      <option value="Div-C">Div C</option>
+                      <option value="Div-D">Div D</option>
                     </>
                   ) : department == "MCA" ? (
                     <>
-                      <option value="First Year">First Year</option>
-                      <option value="Second Year">Second Year</option>
+                      <option value="First-Year">First Year</option>
+                      <option value="Second-Year">Second Year</option>
                     </>
                   ) : (
                     <>
-                      <option value="Second Year">Second Year</option>
-                      <option value="Third Year">Third Year</option>
-                      <option value="Final Year">Final Year</option>
+                      <option value="Second-Year">Second Year</option>
+                      <option value="Third-Year">Third Year</option>
+                      <option value="Final-Year">Final Year</option>
                     </>
                   )}
                 </select>
@@ -185,9 +185,9 @@ export default function Page() {
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {activeFeedbacks.map((fb) => (
                   <div
-                    key={fb.id}
+                    key={fb._id}
                     className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer"
-                    onClick={() => router.push(`/f/${fb.id}`)}
+                    onClick={() => router.push(`/f/${fb._id}`)}
                   >
                     <h3 className="text-lg font-semibold">
                       {fb.feedback_title}
