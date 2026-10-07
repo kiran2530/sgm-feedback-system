@@ -39,7 +39,7 @@ export default function Page() {
         await getFeedbackFormsWithAcademicYearDepartmentClassWiseAction(
           academicYear,
           department,
-          classLevel
+          classLevel,
         );
       if (response.success) {
         setFeedbackData(response.data ?? []);
@@ -118,6 +118,8 @@ export default function Page() {
                   <option value="Electrical">Electrical</option>
                   <option value="Civil">Civil</option>
                   <option value="MCA">MCA</option>
+                  <option value="CSE(AIML)">CSE(AIML)</option>
+                  <option value="ECE(BME)">ECE(BME)</option>
                 </select>
               </div>
 

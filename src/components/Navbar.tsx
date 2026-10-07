@@ -118,7 +118,7 @@ const Navbar = () => {
 
     const data = await createFeedbackFormAction(
       newFeedback,
-      parseInt(totalToken)
+      parseInt(totalToken),
     );
 
     console.log("Created Feedback Data:", data);
@@ -318,6 +318,8 @@ const Navbar = () => {
                     <option value="Electrical">Electrical</option>
                     <option value="Civil">Civil</option>
                     <option value="MCA">MCA</option>
+                    <option value="CSE(AIML)">CSE(AIML)</option>
+                    <option value="ECE(BME)">ECE(BME)</option>
                   </select>
                 </div>
 
@@ -379,7 +381,7 @@ const Navbar = () => {
                         <option key={index} className="">
                           {year}
                         </option>
-                      )
+                      ),
                     )}
                   </select>
                 </div>

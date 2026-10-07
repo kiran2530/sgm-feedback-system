@@ -31,11 +31,13 @@ const departments: Record<string, string[]> = {
   Civil: ["Second Year", "Third Year", "Final Year"],
   Electronics: ["Second Year", "Third Year", "Final Year"],
   MCA: ["First Year", "Second Year"],
+  "CSE(AIML)": ["Second Year", "Third Year", "Final Year"],
+  "ECE(BME)": ["Second Year", "Third Year", "Final Year"],
 };
 
 export default function Page() {
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(
-    null
+    null,
   );
   const [expandedResponses, setExpandedResponses] = useState<number[]>([]); // Added state for expanded rows
 
@@ -60,10 +62,10 @@ export default function Page() {
     [facultyName: string]: number[];
   }
   const [averageWeights, setAverageWeights] = useState<FacultyWeightsRating>(
-    {}
+    {},
   );
   const [averageRatings, setAverageRatings] = useState<FacultyWeightsRating>(
-    {}
+    {},
   );
 
   // loading state for deleting feedback
@@ -134,10 +136,10 @@ export default function Page() {
 
     // Function to check if all arrays in an object are empty
     const areAllArraysEmpty = (
-      obj: { [s: string]: unknown } | ArrayLike<unknown>
+      obj: { [s: string]: unknown } | ArrayLike<unknown>,
     ) => {
       return Object.values(obj).every(
-        (arr) => Array.isArray(arr) && arr.length === 0
+        (arr) => Array.isArray(arr) && arr.length === 0,
       );
     };
 
@@ -169,7 +171,7 @@ export default function Page() {
 
   // Function to calculate the faculty-wise average
   const calculateFacultyAverages = (
-    data: Record<string, number[][]> | undefined
+    data: Record<string, number[][]> | undefined,
   ): Record<string, number[]> => {
     if (!data) {
       return {}; // Return an empty object if data is undefined or null
@@ -184,7 +186,7 @@ export default function Page() {
       }, new Array(values[0]?.length).fill(0));
 
       facultyAverages[faculty] = sumArray.map((sum: number) =>
-        parseFloat((sum / numEntries).toFixed(2))
+        parseFloat((sum / numEntries).toFixed(2)),
       );
     });
 
@@ -199,13 +201,13 @@ export default function Page() {
       (!department ||
         item.department.toLowerCase() === department.toLowerCase()) &&
       (!selectedClass ||
-        item.class.toLowerCase() === selectedClass.toLowerCase())
+        item.class.toLowerCase() === selectedClass.toLowerCase()),
   );
 
   // funtion for toggle response
   const toggleResponse = (id: number) => {
     setExpandedResponses((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
 
@@ -230,7 +232,7 @@ export default function Page() {
   // function for handling delete feedback
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this feedback?"
+      "Are you sure you want to delete this feedback?",
     );
     if (!confirmDelete) return;
 
@@ -614,7 +616,7 @@ export default function Page() {
                     generateExcel(
                       selectedFeedback,
                       averageWeights,
-                      averageRatings
+                      averageRatings,
                     )
                   }
                   className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-2"
@@ -627,7 +629,7 @@ export default function Page() {
                     generateAnalysis(
                       selectedFeedback,
                       averageWeights,
-                      averageRatings
+                      averageRatings,
                     )
                   }
                   className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-green-600 mb-2"
