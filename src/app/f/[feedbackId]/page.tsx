@@ -62,7 +62,7 @@ export default function FeedbackPage() {
   const handleWeightChange = (
     facultyKey: string,
     questionId: number,
-    value: number
+    value: number,
   ) => {
     setWeights((prev) => {
       const updatedWeights = { ...prev };
@@ -74,7 +74,7 @@ export default function FeedbackPage() {
   const handleRatingChange = (
     facultyKey: string,
     questionId: number,
-    value: number
+    value: number,
   ) => {
     setRating((prev) => {
       const updatedRating = { ...prev };
@@ -136,7 +136,7 @@ export default function FeedbackPage() {
         feedbackIdStr,
         authenticationCode,
         weights,
-        rating
+        rating,
       );
 
       if (response.success) {
@@ -154,7 +154,7 @@ export default function FeedbackPage() {
   };
 
   const calculateAverages = (facultyKey: string) => {
-    const facultyResponses = weights[facultyKey] || [];
+    const facultyResponses = rating[facultyKey] || [];
     const questionAverages = facultyResponses.map((sum, i) => sum || 0);
     const overallAverage =
       questionAverages.length > 0
@@ -257,7 +257,7 @@ export default function FeedbackPage() {
                             handleWeightChange(
                               faculty,
                               qIndex,
-                              Number(e.target.value)
+                              Number(e.target.value),
                             )
                           }
                         >
@@ -284,7 +284,7 @@ export default function FeedbackPage() {
                             handleRatingChange(
                               faculty,
                               qIndex,
-                              Number(e.target.value)
+                              Number(e.target.value),
                             );
                           }}
                         >
@@ -331,7 +331,7 @@ export default function FeedbackPage() {
                 onClick={() => {
                   if (
                     nextFacultySubmit(
-                      feedbackData?.faculty_with_subject[nextFaculty]
+                      feedbackData?.faculty_with_subject[nextFaculty],
                     )
                   ) {
                     setNextFaculty((prev) => prev + 1);
