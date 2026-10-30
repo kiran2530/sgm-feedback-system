@@ -1,21 +1,17 @@
-import Link from "next/link";
+import metaInfo from "../AppData/metaInfo.json";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-6 mt-12">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-4">
-        <p className="text-sm text-center md:text-left">&copy; {new Date().getFullYear()} SGM Feedback System. All rights reserved.</p>
-        <div className="flex space-x-4 mt-4 md:mt-0">
-          <Link href="/privacy-policy">
-            <a className="hover:text-gray-400 transition">Privacy Policy</a>
-          </Link>
-          <Link href="/terms-of-service">
-            <a className="hover:text-gray-400 transition">Terms of Service</a>
-          </Link>
-          <Link href="/contact">
-            <a className="hover:text-gray-400 transition">Contact</a>
-          </Link>
-        </div>
+    <footer className="w-full border-t bg-white py-4">
+      <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
+        <p>
+          © {new Date().getFullYear()} {metaInfo.appName}. All rights reserved.
+        </p>
+
+        <p>
+          Version{" "}
+          <span className="font-medium text-gray-700">{metaInfo.version}</span>
+        </p>
       </div>
     </footer>
   );

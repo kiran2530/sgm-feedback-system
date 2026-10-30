@@ -448,7 +448,12 @@ export default function Page() {
                   <div className="flex gap-2">
                     <span className="text-gray-600">Total Responses :</span>
                     <span>
-                      {Object.values(selectedFeedback.rating)[0]?.length}
+                      {Math.max(
+                        0,
+                        ...Object.values(selectedFeedback.rating).map(
+                          (item) => item?.length || 0,
+                        ),
+                      )}
                     </span>
                   </div>
 
