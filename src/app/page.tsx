@@ -4,7 +4,6 @@ import LoginModal from "@/components/LoginModal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-
 export default function Home() {
   const [isLogin, setIsLogin] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -19,8 +18,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+    <div className="h-full pt-10">
+      <div className="h-full bg-gray-100 flex flex-col items-center justify-center p-8">
         {/* Hero Section */}
         <div className="text-center max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Plus, X, User, LogOut, Settings } from "lucide-react";
-import collegeLogo from "../../public/collegeImage.png";
+import collegeLogo from "../../public/collegeLogo.png";
 import Image from "next/image";
 import { Feedback } from "@/types";
 import { createFeedbackFormAction } from "@/actions/feedbacks";
@@ -142,7 +142,14 @@ const Navbar = () => {
           {/* Left Side: Name */}
           {/* <h1 className="text-2xl font-bold">SGM</h1> */}
 
-          <Image src={collegeLogo} alt="SGM" height={60} width={60}></Image>
+          <Image
+            src={collegeLogo}
+            alt="SGMCOE Logo"
+            width={60}
+            height={60}
+            priority
+            className="object-contain"
+          />
 
           {/* Right Side: Buttons */}
           {pathname == "/" ? (
