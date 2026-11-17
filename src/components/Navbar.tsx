@@ -195,8 +195,8 @@ const Navbar = () => {
                 {isProfileOpen && (
                   <div>
                     <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-md rounded-md py-2">
-                      <p className="font-bold px-4">Prof. S. S. Gurav</p>
-                      <p className="text-sm px-4">+91 9209623553</p>
+                      <p className="font-bold px-4">Admin</p>
+                      {/* <p className="text-sm px-4">+91 9209623553</p> */}
 
                       <hr className="border-gray-500 mt-1" />
                       <button

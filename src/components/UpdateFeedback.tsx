@@ -13,16 +13,16 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
     (faculty) => {
       const [name, subject] = faculty.split(":");
       return { name, subject };
-    }
+    },
   );
 
   const initialYears: string[] = [];
   const [years, setYears] = useState(initialYears);
   const [academicYear, setAcademicYear] = useState(
-    selectedFeedback.academic_year
+    selectedFeedback.academic_year,
   );
   const [feedbackName, setFeedbackName] = useState(
-    selectedFeedback.feedback_title
+    selectedFeedback.feedback_title,
   );
   const [department, setDepartment] = useState(selectedFeedback.department);
   const [classLevel, setClassLevel] = useState(selectedFeedback.class);
@@ -33,7 +33,7 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [totalToken, setTotalToken] = useState(
-    selectedFeedback.unique_codes.length + ""
+    selectedFeedback.unique_codes.length + "",
   );
   const [dueDate, setDueDate] = useState(selectedFeedback.date);
 
@@ -79,7 +79,7 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
       const data = await updateFeedbackFormAction(
         feedbackId,
         updatedFeedback,
-        parseInt(totalToken)
+        parseInt(totalToken),
       );
       console.log("successfull");
 
@@ -168,6 +168,9 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
                 <option value="Mechanical">Mechanical</option>
                 <option value="Electrical">Electrical</option>
                 <option value="Civil">Civil</option>
+                <option value="MCA">MCA</option>
+                <option value="CSE(AIML)">CSE(AIML)</option>
+                <option value="ECE(BME)">ECE(BME)</option>
               </select>
             </div>
 
@@ -190,6 +193,8 @@ const UpdateFeedback = ({ selectedFeedback, onClose }: MyComponentProps) => {
                     <option value="Div B">Div B</option>
                     <option value="Div C">Div C</option>
                     <option value="Div D">Div D</option>
+                    <option value="Div E">Div E</option>
+                    <option value="Div F">Div F</option>
                   </>
                 ) : department == "MCA" ? (
                   <>
